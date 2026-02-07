@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('تطبيق هدى - الإصدار الذهبي'), centerTitle: true),
+      appBar: AppBar(title: const Text('تطبيق هدى - الإصدار الشامل'), centerTitle: true),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                 _card(context, 'القرآن المسموع', Icons.audiotrack, const AudioQuran()),
                 _card(context, 'الموسوعة الحديثة', Icons.auto_stories, const HadithEncyclopedia()),
                 _card(context, 'الرقية الشرعية', Icons.health_and_safety, const RoqiaScreen()),
-                _card(context, 'حصن المسلم', Icons.mosque, const AthkarList()),
+                _card(context, 'أذكار حصن المسلم', Icons.mosque, const AthkarList()),
                 _card(context, 'المسبحة الذكية', Icons.fingerprint, const CounterScreen()),
                 _card(context, 'اتجاه القبلة', Icons.explore, const QiblaScreen()),
               ],
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(color: Colors.teal.withOpacity(0.2), borderRadius: BorderRadius.circular(15)),
     child: const Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-      Text('الفجر 4:50'), Text('الظهر 12:12'), Text('العصر 3:30'), Text('المغرب 5:50'),
+      Text('الفجر 4:52'), Text('الظهر 12:10'), Text('العصر 3:25'), Text('المغرب 5:45'),
     ]),
   );
 
@@ -63,29 +63,11 @@ class HomeScreen extends StatelessWidget {
   ));
 }
 
-// --- ميزة الرقية الشرعية الجديدة ---
-class RoqiaScreen extends StatelessWidget {
-  const RoqiaScreen({super.key});
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الرقية الشرعية')),
-    body: ListView(
-      padding: const EdgeInsets.all(15),
-      children: const [
-        Text('أعوذ بالله من الشيطان الرجيم', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        SizedBox(height: 10),
-        Text('قراءة آية الكرسي، المعوذات، وأواخر سورة البقرة...', style: TextStyle(fontSize: 18), textAlign: TextAlign.right),
-        Divider(),
-        ListTile(leading: Icon(Icons.play_circle), title: Text('استماع للرقية الشرعية (بصوت مشاري العفاسي)')),
-      ],
-    ),
-  );
-}
-
-// الأقسام الأساسية لضمان عمل التطبيق
+// الأقسام المضافة (الرقية، الأذكار، الموسوعة)
 class AudioQuran extends StatelessWidget { const AudioQuran({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القرآن المسموع'))); }
 class HadithEncyclopedia extends StatelessWidget { const HadithEncyclopedia({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('الموسوعة الحديثة'))); }
+class RoqiaScreen extends StatelessWidget { const RoqiaScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('الرقية الشرعية'))); }
 class AthkarList extends StatelessWidget { const AthkarList({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('حصن المسلم'))); }
-class QiblaScreen extends StatelessWidget { const QiblaScreen({super.oy}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القبلة'))); }
+class QiblaScreen extends StatelessWidget { const QiblaScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القبلة'))); }
 class CounterScreen extends StatefulWidget { const CounterScreen({super.key}); @override State<CounterScreen> createState() => _CS(); }
 class _CS extends State<CounterScreen> { int n = 0; @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('المسبحة')), body: Center(child: Text('$n', style: const TextStyle(fontSize: 100)))); }
