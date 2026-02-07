@@ -1,41 +1,53 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const HudaApp());
+// تم تغيير اسم التطبيق برمجياً ليقبله الجوال كنسخة جديدة
+void main() => runApp(const HudaProVersion()); 
 
-class HudaApp extends StatelessWidget {
-  const HudaApp({super.key});
+class HudaProVersion extends StatelessWidget {
+  const HudaProVersion({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'هدى برو الاحترافي', // اسم جديد للهوية
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.teal, brightness: Brightness.dark),
-      home: const HomeScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        brightness: Brightness.dark, // الوضع الليلي لتمييزه عن القديم
+        scaffoldBackgroundColor: const Color(0xFF001A1A), // لون خلفية ملكي
+      ),
+      home: const MainMenu(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class MainMenu extends StatelessWidget {
+  const MainMenu({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('تطبيق هدى - الإصدار الشامل'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('الموسوعة الإسلامية الشاملة'),
+        centerTitle: true,
+        backgroundColor: Colors.teal.shade900,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _prayerBanner(),
+            _buildHeader(),
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,
               padding: const EdgeInsets.all(15),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
               children: [
-                _card(context, 'القرآن المسموع', Icons.audiotrack, const AudioQuran()),
-                _card(context, 'الموسوعة الحديثة', Icons.auto_stories, const HadithEncyclopedia()),
-                _card(context, 'الرقية الشرعية', Icons.health_and_safety, const RoqiaScreen()),
-                _card(context, 'أذكار حصن المسلم', Icons.mosque, const AthkarList()),
-                _card(context, 'المسبحة الذكية', Icons.fingerprint, const CounterScreen()),
-                _card(context, 'اتجاه القبلة', Icons.explore, const QiblaScreen()),
+                _menuCard(context, 'المصحف المسموع', Icons.audiotrack, Colors.amber),
+                _menuCard(context, 'الموسوعة الحديثة', Icons.library_books, Colors.greenAccent),
+                _menuCard(context, 'الرقية الشرعية', Icons.security, Colors.blueAccent),
+                _menuCard(context, 'حصن المسلم', Icons.mosque, Colors.tealAccent),
+                _menuCard(context, 'المسبحة الذكية', Icons.fingerprint, Colors.orangeAccent),
+                _menuCard(context, 'اتجاه القبلة', Icons.explore, Colors.redAccent),
               ],
             ),
           ],
@@ -44,62 +56,54 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _prayerBanner() => Container(
-    margin: const EdgeInsets.all(15),
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(color: Colors.teal.withOpacity(0.2), borderRadius: BorderRadius.circular(15)),
-    child: const Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-      Text('الفجر 4:52'), Text('الظهر 12:10'), Text('العصر 3:25'), Text('المغرب 5:45'),
-    ]),
-  );
-
-  Widget _card(context, t, i, s) => Card(child: InkWell(
-    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => s)),
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(i, size: 40, color: Colors.tealAccent),
-      const SizedBox(height: 8),
-      Text(t, style: const TextStyle(fontWeight: FontWeight.bold)),
-    ]),
-  ));
-}
-
-// الأقسام المضافة (الرقية، الأذكار، الموسوعة)
-class AudioQuran extends StatelessWidget { const AudioQuran({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القرآن المسموع'))); }
-class HadithEncyclopedia extends StatelessWidget { const HadithEncyclopedia({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('الموسوعة الحديثة'))); }
-class RoqiaScreen extends StatelessWidget { const RoqiaScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('الرقية الشرعية'))); }
-class AthkarList extends StatelessWidget { const class AthkarList extends StatelessWidget {
-  const AthkarList({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('أذكار حصن المسلم')),
-      body: ListView(
-        padding: const EdgeInsets.all(10),
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.teal.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.teal.shade700),
+      ),
+      child: const Column(
         children: [
-          _athkarTile(context, 'أذكار الصباح', 'أصبحنا وأصبح الملك لله، والحمد لله...'),
-          _athkarTile(context, 'أذكار المساء', 'أمسينا وأمسى الملك لله، والحمد لله...'),
-          _athkarTile(context, 'أذكار النوم', 'باسمك ربي وضعت جنبي وبك أرفعه...'),
+          Text('أوقات الصلاة اليوم', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text('الفجر: 4:52'),
+              Text('الظهر: 12:10'),
+              Text('المغرب: 5:45'),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _athkarTile(BuildContext context, String title, String content) => Card(
-    child: ListTile(
-      leading: const Icon(Icons.wb_sunny, color: Colors.orangeAccent),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      onTap: () => showDialog(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: Text(title),
-          content: Text(content, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18)),
-          actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('إغلاق'))],
+  Widget _menuCard(BuildContext context, String title, IconData icon, Color color) {
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: InkWell(
+        onTap: () => _openFeature(context, title),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 45, color: color),
+            const SizedBox(height: 10),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          ],
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  void _openFeature(BuildContext context, String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('جاري فتح $title...'), duration: const Duration(seconds: 1)),
+    );
+  }
 }
-({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('حصن المسلم'))); }
-class QiblaScreen extends StatelessWidget { const QiblaScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القبلة'))); }
-class CounterScreen extends StatefulWidget { const CounterScreen({super.key}); @override State<CounterScreen> createState() => _CS(); }
-class _CS extends State<CounterScreen> { int n = 0; @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('المسبحة')), body: Center(child: Text('$n', style: const TextStyle(fontSize: 100)))); }
