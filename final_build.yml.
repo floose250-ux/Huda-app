@@ -1,4 +1,4 @@
-name:  Huda Build New
+name:  Huda App Final
 on: [push, workflow_dispatch]
 jobs:
   build:
