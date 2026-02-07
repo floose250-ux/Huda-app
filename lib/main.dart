@@ -67,7 +67,39 @@ class HomeScreen extends StatelessWidget {
 class AudioQuran extends StatelessWidget { const AudioQuran({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القرآن المسموع'))); }
 class HadithEncyclopedia extends StatelessWidget { const HadithEncyclopedia({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('الموسوعة الحديثة'))); }
 class RoqiaScreen extends StatelessWidget { const RoqiaScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('الرقية الشرعية'))); }
-class AthkarList extends StatelessWidget { const AthkarList({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('حصن المسلم'))); }
+class AthkarList extends StatelessWidget { const class AthkarList extends StatelessWidget {
+  const AthkarList({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('أذكار حصن المسلم')),
+      body: ListView(
+        padding: const EdgeInsets.all(10),
+        children: [
+          _athkarTile(context, 'أذكار الصباح', 'أصبحنا وأصبح الملك لله، والحمد لله...'),
+          _athkarTile(context, 'أذكار المساء', 'أمسينا وأمسى الملك لله، والحمد لله...'),
+          _athkarTile(context, 'أذكار النوم', 'باسمك ربي وضعت جنبي وبك أرفعه...'),
+        ],
+      ),
+    );
+  }
+
+  Widget _athkarTile(BuildContext context, String title, String content) => Card(
+    child: ListTile(
+      leading: const Icon(Icons.wb_sunny, color: Colors.orangeAccent),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      onTap: () => showDialog(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: Text(title),
+          content: Text(content, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18)),
+          actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('إغلاق'))],
+        ),
+      ),
+    ),
+  );
+}
+({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('حصن المسلم'))); }
 class QiblaScreen extends StatelessWidget { const QiblaScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('القبلة'))); }
 class CounterScreen extends StatefulWidget { const CounterScreen({super.key}); @override State<CounterScreen> createState() => _CS(); }
 class _CS extends State<CounterScreen> { int n = 0; @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('المسبحة')), body: Center(child: Text('$n', style: const TextStyle(fontSize: 100)))); }
