@@ -1,4 +1,4 @@
-name: Huda APK Final
+name: Start Huda Build
 on: [push, workflow_dispatch]
 jobs:
   build:
