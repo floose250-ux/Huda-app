@@ -12,5 +12,5 @@ jobs:
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v3
         with:
-          name: Huda-Final-App
+          name: Huda-Final-App-Apk
           path: build/app/outputs/flutter-apk/app-release.apk
