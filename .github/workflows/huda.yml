@@ -16,4 +16,3 @@ jobs:
         with:
           name: Huda-Pro-New-Version-Fixed
           path: build/app/outputs/flutter-apk/app-release.apk
-concurrency: 
