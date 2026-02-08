@@ -1,4 +1,4 @@
-name: HUDA-VERIFIED-PROHIBITIONS-V44
+name: HUDA-PRO-ULTIMATE-V47
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,23 +9,23 @@ jobs:
         with:
           channel: 'stable'
       
-      - run: flutter create . --org com.huda.pro.world --project-name huda_pro --overwrite
+      - run: flutter create . --org com.huda.pro.ultimate --project-name huda_pro --overwrite
       
       - run: |
           mkdir -p lib
           cat <<'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
 
-          void main() => runApp(const MaterialApp(home: MainNav(), debugShowCheckedModeBanner: false));
+          void main() => runApp(const MaterialApp(home: MainNavigation(), debugShowCheckedModeBanner: false));
 
-          class MainNav extends StatefulWidget {
-            const MainNav({super.key});
-            @override _MainNavState createState() => _MainNavState();
+          class MainNavigation extends StatefulWidget {
+            const MainNavigation({super.key});
+            @override _MainNavigationState createState() => _MainNavigationState();
           }
 
-          class _MainNavState extends State<MainNav> {
+          class _MainNavigationState extends State<MainNavigation> {
             int _idx = 0;
-            final List<Widget> _screens = [const HomeScreen(), const QuranIndex(), const SahabaScreen(), const ProhibitionsScreen()];
+            final List<Widget> _screens = [const HomeScreen(), const QuranIndex(), const SahabaIndex(), const ProhibitionsScreen(), const KidsCorner()];
             @override
             Widget build(BuildContext context) => Scaffold(
               body: _screens[_idx],
@@ -40,79 +40,114 @@ jobs:
                   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
                   BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
                   BottomNavigationBarItem(icon: Icon(Icons.people), label: 'الصحابة'),
-                  BottomNavigationBarItem(icon: Icon(Icons.warning_amber_rounded), label: 'المحرمات'),
+                  BottomNavigationBarItem(icon: Icon(Icons.warning), label: 'المحرمات'),
+                  BottomNavigationBarItem(icon: Icon(Icons.child_care), label: 'البراعم'),
                 ],
               ),
             );
           }
 
-          class ProhibitionsScreen extends StatelessWidget {
-            const ProhibitionsScreen({super.key});
-            
-            final List<Map<String, dynamic>> data = const [
-              {
-                'title': 'الشرك بالله (أكبر الكبائر)',
-                'proofs': [
-                  'قال ﷺ: "ألا أنبئكم بأكبر الكبائر؟ الإشراك بالله.." (متفق عليه)',
-                  'قال ﷺ: "من مات وهو يدعو من دون الله نداً دخل النار" (رواه البخاري)'
-                ]
-              },
-              {
-                'title': 'عقوق الوالدين',
-                'proofs': [
-                  'قال ﷺ: "رضا الرب في رضا الوالد، وسخط الرب في سخط الوالد" (رواه الترمذي)',
-                  'قال ﷺ: "لا يدخل الجنة عاق.." (رواه النسائي)'
-                ]
-              },
-              {
-                'title': 'الربا وآكل مال اليتيم',
-                'proofs': [
-                  'قال ﷺ: "اجتنبوا السبع الموبقات.. وأكل الربا، وأكل مال اليتيم" (متفق عليه)',
-                  'لعن رسول الله ﷺ آكل الربا وموكله وكاتبه وشاهديه وقال: "هم سواء" (رواه مسلم)'
-                ]
-              },
-              {
-                'title': 'الغيبة والنميمة',
-                'proofs': [
-                  'قال ﷺ: "لا يدخل الجنة نمام" (متفق عليه)',
-                  'لما عرج بي مررت بقوم لهم أظفار من نحاس يخمشون وجوههم.. قلت من هؤلاء؟ قال: هؤلاء الذين يأكلون لحوم الناس (رواه أبو داود)'
-                ]
-              },
-              {
-                'title': 'الإسبال (للرجال)',
-                'proofs': [
-                  'قال ﷺ: "ما أسفل من الكعبين من الإزار ففي النار" (رواه البخاري)',
-                  'قال ﷺ: "ثلاثة لا يكلمهم الله يوم القيامة.. المسبل إزاره" (رواه مسلم)'
-                ]
-              }
-            ];
-
+          // --- 1. المصحف الشريف مع ميزة البحث ---
+          class QuranIndex extends StatefulWidget {
+            const QuranIndex({super.key});
+            @override _QuranIndexState createState() => _QuranIndexState();
+          }
+          class _QuranIndexState extends State<QuranIndex> {
+            final List<String> surahs = const ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات', 'النبأ', 'النازعات', 'عبس', 'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس'];
+            String search = "";
             @override
             Widget build(BuildContext context) => Scaffold(
               backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('المحرمات من السنة الصحيحة'), backgroundColor: const Color(0xFF001F1F)),
-              body: ListView.builder(
-                itemCount: data.length,
-                padding: const EdgeInsets.all(10),
-                itemBuilder: (context, i) => Card(
-                  color: const Color(0xFF001F1F),
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ExpansionTile(
-                    title: Text(data[i]['title'], style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
-                    leading: const Icon(Icons.error_outline, color: Colors.redAccent),
-                    children: (data[i]['proofs'] as List<String>).map((p) => Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Text(p, textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.5)),
-                    )).toList(),
-                  ),
+              appBar: AppBar(
+                title: TextField(
+                  decoration: const InputDecoration(hintText: 'ابحث عن سورة...', border: InputBorder.none),
+                  onChanged: (val) => setState(() => search = val),
                 ),
+                backgroundColor: const Color(0xFF001F1F),
+              ),
+              body: ListView.builder(
+                itemCount: surahs.length,
+                itemBuilder: (c, i) {
+                  if (search.isNotEmpty && !surahs[i].contains(search)) return const SizedBox();
+                  return ListTile(
+                    leading: CircleAvatar(child: Text('${i+1}')),
+                    title: Text(surahs[i], style: const TextStyle(color: Colors.white)),
+                    onTap: () {},
+                  );
+                },
               ),
             );
           }
 
-          class HomeScreen extends StatelessWidget { const HomeScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text('هدى برو')); }
-          class QuranIndex extends StatelessWidget { const QuranIndex({super.key}); @override Widget build(BuildContext context) => const Center(child: Text('المصحف')); }
-          class SahabaScreen extends StatelessWidget { const SahabaScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text('الصحابة')); }
+          // --- 2. ركن الأطفال (براعم الإيمان) ---
+          class KidsCorner extends StatelessWidget {
+            const KidsCorner({super.key});
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              backgroundColor: const Color(0xFF000D0D),
+              appBar: AppBar(title: const Text('براعم الإيمان'), backgroundColor: Colors.purple.shade900),
+              body: GridView.count(
+                crossAxisCount: 2, padding: const EdgeInsets.all(15),
+                children: [
+                  _kidsCard('قصص الأنبياء', Icons.auto_stories, Colors.orange),
+                  _kidsCard('أخلاق المسلم الصغير', Icons.favorite, Colors.pink),
+                  _kidsCard('حفظ قصار السور', Icons.mic, Colors.blue),
+                  _kidsCard('أذكار الطفل', Icons.wb_sunny, Colors.amber),
+                ],
+              ),
+            );
+            Widget _kidsCard(String t, IconData i, Color c) => Card(
+              color: const Color(0xFF1A001A),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(i, size: 50, color: c), Text(t, textAlign: TextAlign.center)]),
+            );
+          }
+
+          // --- 3. الصحابة والأنساب (بنو تيم، عدي، هاشم، مخزوم) ---
+          class SahabaIndex extends StatelessWidget {
+            const SahabaIndex({super.key});
+            final List<Map<String, String>> data = const [
+              {'n': 'أبو بكر الصديق', 't': 'بنو تيم - قريش'},
+              {'n': 'عمر بن الخطاب', 't': 'بنو عدي - قريش'},
+              {'n': 'عثمان بن عفان', 't': 'بنو أمية - قريش'},
+              {'n': 'علي بن أبي طالب', 't': 'بنو هاشم - قريش'},
+              {'n': 'خالد بن الوليد', 't': 'بنو مخزوم - قريش'},
+              {'n': 'أبو عبيدة الجراح', 't': 'بنو الحارث - قريش'},
+            ];
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              backgroundColor: const Color(0xFF000D0D),
+              appBar: AppBar(title: const Text('الصحابة والأنساب'), backgroundColor: const Color(0xFF001F1F)),
+              body: ListView.builder(itemCount: data.length, itemBuilder: (c, i) => Card(
+                color: const Color(0xFF001F1F),
+                child: ListTile(title: Text(data[i]['n']!, style: const TextStyle(color: Colors.amber)), subtitle: Text('النسب: ${data[i]['t']}')),
+              )),
+            );
+          }
+
+          // --- 4. المحرمات الموثقة بالأدلة ---
+          class ProhibitionsScreen extends StatelessWidget {
+            const ProhibitionsScreen({super.key});
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              backgroundColor: const Color(0xFF000D0D),
+              appBar: AppBar(title: const Text('تنبيهات شرعية'), backgroundColor: const Color(0xFF001F1F)),
+              body: ListView(children: [
+                _warn('الإسبال (للرجال)', 'قال ﷺ: "ما أسفل من الكعبين من الإزار ففي النار" (رواه البخاري)'),
+                _warn('تصوير ذوات الأرواح', 'قال ﷺ: "إن أشد الناس عذاباً يوم القيامة المصورون" (متفق عليه)'),
+                _warn('الغيبة والنميمة', 'قال ﷺ: "لا يدخل الجنة نمام" (متفق عليه)'),
+              ]),
+            );
+            Widget _warn(String t, String p) => ExpansionTile(
+              title: Text(t, style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+              children: [Padding(padding: const EdgeInsets.all(15), child: Text(p))],
+            );
+          }
+
+          class HomeScreen extends StatelessWidget {
+            const HomeScreen({super.key});
+            @override
+            Widget build(BuildContext context) => const Scaffold(backgroundColor: Color(0xFF000D0D), body: Center(child: Text('هدى برو - الواجهة الرئيسية')));
+          }
           EOF
 
       - run: flutter pub get
@@ -120,5 +155,5 @@ jobs:
       
       - uses: actions/upload-artifact@v4
         with:
-          name: HUDA-VERIFIED-PROHIBITIONS-V44
+          name: HUDA-PRO-V47-ULTIMATE
           path: build/app/outputs/flutter-apk/app-release.apk
