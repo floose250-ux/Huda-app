@@ -1,10 +1,25 @@
-name: huda_pro_new
-description: تطبيق هدى الإسلامي
-version: 1.0.0
+name: huda_pro
+description: A professional Islamic application for Quran, Azkar, and Lineage.
+version: 1.0.0+1
+
 environment:
   sdk: ">=3.0.0 <4.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
 flutter:
   uses-material-design: true
+
+  # تعريف ملفات البيانات والصور (Assets)
+  assets:
+    - assets/quran.json
+    # يمكنك إضافة مجلد الصور هنا مستقبلاً لـ "براعم الإيمان"
+    # - assets/images/
