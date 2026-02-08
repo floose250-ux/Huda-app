@@ -1,24 +1,46 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MaterialApp(home: HudaPro(), debugShowCheckedModeBanner: false));
+// تم تغيير الهوية البرمجية لضمان عدم نزول النسخة القديمة
+void main() => runApp(const MaterialApp(home: HudaProNew(), debugShowCheckedModeBanner: false));
 
-class HudaPro extends StatelessWidget {
-  const HudaPro({super.key});
+class HudaProNew extends StatelessWidget {
+  const HudaProNew({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(title: const Text('Huda Pro - الإصدار الجديد'), backgroundColor: Colors.teal),
+      backgroundColor: const Color(0xFF000B0B), // خلفية سوداء ملكية
+      appBar: AppBar(
+        title: const Text('هدى برو - النسخة الجديدة'), 
+        backgroundColor: Colors.teal.shade900,
+        centerTitle: true,
+      ),
       body: GridView.count(
         crossAxisCount: 2,
+        padding: const EdgeInsets.all(20),
+        mainAxisSpacing: 15,
+        crossAxisSpacing: 15,
         children: [
-          _card('القرآن', Icons.book),
-          _card('الأذكار', Icons.wb_sunny),
-          _card('المسبحة', Icons.fingerprint),
-          _card('القبلة', Icons.explore),
+          _buildItem('القرآن الكريم', Icons.menu_book, Colors.amber),
+          _buildItem('الأذكار', Icons.wb_sunny, Colors.orange),
+          _buildItem('المسبحة', Icons.fingerprint, Colors.tealAccent),
+          _buildItem('القبلة', Icons.explore, Colors.redAccent),
+          _buildItem('الموسوعة', Icons.library_books, Colors.green),
+          _buildItem('الرقية', Icons.security, Colors.blue),
         ],
       ),
     );
   }
-  Widget _card(String t, IconData i) => Card(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(i, size: 50, color: Colors.teal), Text(t)]));
+
+  Widget _buildItem(String title, IconData icon, Color color) => Card(
+    color: const Color(0xFF002424),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 50, color: color),
+        const SizedBox(height: 10),
+        Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ],
+    ),
+  );
 }
