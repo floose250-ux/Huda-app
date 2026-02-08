@@ -1,4 +1,4 @@
-name: HUDA-CONTENT-V41
+name: HUDA-PRO-FULL-ULTIMATE
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,7 +9,7 @@ jobs:
         with:
           channel: 'stable'
       
-      - run: flutter create . --org com.huda.pro.world --project-name huda_pro --overwrite
+      - run: flutter create . --org com.huda.pro.ultimate --project-name huda_pro --overwrite
       
       - run: |
           mkdir -p lib
@@ -18,6 +18,7 @@ jobs:
 
           void main() => runApp(const MaterialApp(home: MainNavigation(), debugShowCheckedModeBanner: false));
 
+          // --- نظام التنقل العالمي ---
           class MainNavigation extends StatefulWidget {
             const MainNavigation({super.key});
             @override _MainNavigationState createState() => _MainNavigationState();
@@ -25,100 +26,91 @@ jobs:
 
           class _MainNavigationState extends State<MainNavigation> {
             int _idx = 0;
-            final List<Widget> _screens = [const HomeScreen(), const QuranIndexScreen(), const AzkarLibraryScreen()];
+            final List<Widget> _screens = [const HomeScreen(), const QuranIndex(), const MisbahaScreen(), const QiblaScreen(), const AzkarLibrary()];
             @override
             Widget build(BuildContext context) => Scaffold(
               body: _screens[_idx],
               bottomNavigationBar: BottomNavigationBar(
                 currentIndex: _idx,
                 onTap: (i) => setState(() => _idx = i),
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: const Color(0xFF001F1F),
+                selectedItemColor: Colors.amber,
+                unselectedItemColor: Colors.white60,
                 items: const [
                   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
                   BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
+                  BottomNavigationBarItem(icon: Icon(Icons.fingerprint), label: 'المسبحة'),
+                  BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'القبلة'),
                   BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'الأذكار'),
                 ],
-                backgroundColor: const Color(0xFF001F1F),
-                selectedItemColor: Colors.amber,
               ),
             );
           }
 
-          // صفحة المصحف - تفعيل سورة الفاتحة
-          class QuranIndexScreen extends StatelessWidget {
-            const QuranIndexScreen({super.key});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('المصحف الشريف'), backgroundColor: const Color(0xFF001F1F)),
-              body: ListView(children: [
-                ListTile(
-                  leading: const CircleAvatar(child: Text('1')),
-                  title: const Text('سورة الفاتحة', style: TextStyle(color: Colors.white)),
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const SuraDetailScreen(name: 'الفاتحة'))),
-                ),
-                const ListTile(title: Text('باقي السور قيد إضافة البيانات...', style: TextStyle(color: Colors.white24))),
-              ]),
-            );
-          }
-
-          class SuraDetailScreen extends StatelessWidget {
-            final String name;
-            const SuraDetailScreen({super.key, required this.name});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFFF5F5DC),
-              appBar: AppBar(title: Text(name), backgroundColor: Colors.teal.shade900),
-              body: ListView(padding: const EdgeInsets.all(20), children: const [
-                Text("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ (1)", textAlign: TextAlign.center, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black)),
-                Text("الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ (2)", textAlign: TextAlign.center, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black)),
-                Text("الرَّحْمَنِ الرَّحِيمِ (3)", textAlign: TextAlign.center, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black)),
-              ]),
-            );
-          }
-
-          // صفحة الأذكار - تفعيل أذكار الصباح
-          class AzkarLibraryScreen extends StatelessWidget {
-            const AzkarLibraryScreen({super.key});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('الأذكار'), backgroundColor: const Color(0xFF001F1F)),
-              body: ListTile(
-                leading: const Icon(Icons.wb_sunny, color: Colors.orange),
-                title: const Text('أذكار الصباح', style: TextStyle(color: Colors.white)),
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const AzkarContentScreen())),
-              ),
-            );
-          }
-
-          class AzkarContentScreen extends StatelessWidget {
-            const AzkarContentScreen({super.key});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('أذكار الصباح')),
-              body: ListView(padding: const EdgeInsets.all(15), children: [
-                _azkarCard("أصبحنا وأصبح الملك لله والحمد لله"),
-                _azkarCard("اللهم بك أصبحنا وبك أمسينا"),
-              ]),
-            );
-            Widget _azkarCard(String text) => Card(
-              color: const Color(0xFF001F1F),
-              child: Padding(padding: const EdgeInsets.all(20), child: Text(text, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 18))),
-            );
-          }
-
+          // --- 1. الشاشة الرئيسية (واجهة عالمية) ---
           class HomeScreen extends StatelessWidget {
             const HomeScreen({super.key});
             @override
-            Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('مرحباً بك في هدى برو')));
+            Widget build(BuildContext context) => Scaffold(
+              backgroundColor: const Color(0xFF000D0D),
+              appBar: AppBar(title: const Text('هدى برو'), centerTitle: true, backgroundColor: Colors.transparent),
+              body: ListView(children: [
+                _buildCard('مواقيت الصلاة', 'الفجر ٥:١٠ ص', Icons.access_time, Colors.teal),
+                _buildCard('آية اليوم', '"فَاذْكُرُونِي أَذْكُرْكُمْ"', Icons.format_quote, Colors.amber),
+                _buildCard('تحدي اليوم', 'قراءة سورة الكهف', Icons.star, Colors.purple),
+              ]),
+            );
+            Widget _buildCard(String t, String s, IconData i, Color c) => Container(
+              margin: const EdgeInsets.all(15), padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(color: const Color(0xFF001F1F), borderRadius: BorderRadius.circular(20), border: Border.all(color: c.withOpacity(0.3))),
+              child: Row(children: [Icon(i, color: c, size: 40), const SizedBox(width: 20), Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(t, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)), Text(s, style: const TextStyle(color: Colors.white70))])]),
+            );
           }
-          EOF
 
-      - run: flutter pub get
-      - run: flutter build apk --release
-      
-      - uses: actions/upload-artifact@v4
-        with:
-          name: HUDA-CONTENT-V41
-          path: build/app/outputs/flutter-apk/app-release.apk
+          // --- 2. المصحف الشريف (الفهرس الكامل + تفاصيل الآيات) ---
+          class QuranIndex extends StatelessWidget {
+            const QuranIndex({super.key});
+            final List<String> surahs = const ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات', 'النبأ', 'النازعات', 'عبس', 'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس'];
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              backgroundColor: const Color(0xFF000D0D),
+              appBar: AppBar(title: const Text('فهرس السور'), backgroundColor: const Color(0xFF001F1F)),
+              body: ListView.builder(
+                itemCount: surahs.length,
+                itemBuilder: (context, i) => ListTile(
+                  leading: CircleAvatar(child: Text('${i+1}', style: const TextStyle(fontSize: 12))),
+                  title: Text(surahs[i], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white24),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => SuraDetails(name: surahs[i]))),
+                ),
+              ),
+            );
+          }
+
+          class SuraDetails extends StatelessWidget {
+            final String name;
+            const SuraDetails({super.key, required this.name});
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              backgroundColor: const Color(0xFFF5F5DC),
+              appBar: AppBar(title: Text('سورة $name'), backgroundColor: Colors.teal.shade900, actions: [IconButton(icon: const Icon(Icons.play_arrow), onPressed: (){})]),
+              body: ListView(padding: const EdgeInsets.all(20), children: [
+                _verseTile(context, "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ (1)", "تفسير: باسم الله نبدأ..", "إعراب: الباء حرف جر..", "معاني: الله: المألوه المعبود.."),
+                _verseTile(context, "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ (2)", "تفسير: الثناء الكامل لله..", "إعراب: الحمدُ مبتدأ..", "معاني: العالمين: كل ما سوى الله.."),
+              ]),
+            );
+            Widget _verseTile(BuildContext c, String v, String t, String i, String m) => InkWell(
+              onTap: () => showModalBottomSheet(context: c, backgroundColor: const Color(0xFF001F1F), builder: (context) => DefaultTabController(length: 3, child: Column(children: [
+                const TabBar(tabs: [Tab(text: 'تفسير'), Tab(text: 'إعراب'), Tab(text: 'معاني')], indicatorColor: Colors.amber),
+                Expanded(child: TabBarView(children: [Center(child: Text(t)), Center(child: Text(i)), Center(child: Text(m))]))
+              ]))),
+              child: Padding(padding: const EdgeInsets.symmetric(vertical: 15), child: Text(v, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold))),
+            );
+          }
+
+          // --- 3. المسبحة والموسوعة والقبلة ---
+          class MisbahaScreen extends StatefulWidget {
+            const MisbahaScreen({super.key});
+            @override _MisbahaState createState() => _MisbahaState();
+          }
