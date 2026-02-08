@@ -1,4 +1,4 @@
-name: HUDA-PRO-CONTENT-V61
+name: HUDA-PRO-FIX-SYSTEM-V62
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,102 +9,21 @@ jobs:
         with:
           channel: 'stable'
       
-      - run: flutter create . --org com.huda.pro.v61 --project-name huda_pro --overwrite
+      # الخطوة الذهبية: إنشاء ملفات أندرويد المفقودة وإصلاح خطأ Gradle
+      - run: flutter create . --org com.huda.app.final --project-name huda_pro --overwrite
       
+      # التأكد من وجود ملفاتك المستقلة ونقلها للمكان الصحيح (إذا كانت في المجلد الرئيسي)
       - run: |
           mkdir -p lib/screens
-          mkdir -p assets
-          
-          # 1. المحرك الرئيسي (تنسيق واجهة هدى برو)
-          cat <<'EOF' > lib/main.dart
-          import 'package:flutter/material.dart';
-          import 'screens/quran.dart';
-          import 'screens/lineage.dart';
-          import 'screens/haram.dart';
-
-          void main() => runApp(const MaterialApp(home: MainNav(), debugShowCheckedModeBanner: false));
-
-          class MainNav extends StatefulWidget {
-            const MainNav({super.key});
-            @override _MainNavState createState() => _MainNavState();
-          }
-
-          class _MainNavState extends State<MainNav> {
-            int _idx = 1; // البداية من المصحف
-            final List<Widget> _screens = [const Center(child: Text('الرئيسية')), const QuranPage(), const LineagePage(), const HaramPage()];
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              body: _screens[_idx],
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: _idx,
-                onTap: (i) => setState(() => _idx = i),
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: const Color(0xFF001F1F),
-                selectedItemColor: Colors.amber,
-                unselectedItemColor: Colors.white60,
-                items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
-                  BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
-                  BottomNavigationBarItem(icon: Icon(Icons.people), label: 'الأنساب'),
-                  BottomNavigationBarItem(icon: Icon(Icons.warning), label: 'المحرمات'),
-                ],
-              ),
-            );
-          }
-          EOF
-
-          # 2. ملف المحرمات الموثقة (أدلة الإسبال والنميمة وغيرها)
-          cat <<'EOF' > lib/screens/haram.dart
-          import 'package:flutter/material.dart';
-          class HaramPage extends StatelessWidget {
-            const HaramPage({super.key});
-            final List<Map<String, dynamic>> data = const [
-              {'t': 'الإسبال (للرجال)', 'p': 'قال ﷺ: "ما أسفل من الكعبين من الإزار ففي النار" (رواه البخاري)'},
-              {'t': 'النميمة', 'p': 'قال ﷺ: "لا يدخل الجنة نمام" (متفق عليه)'},
-              {'t': 'هجر المسلم', 'p': 'قال ﷺ: "لا يحل لمسلم أن يهجر أخاه فوق ثلاث ليال"'},
-              {'t': 'الغيبة', 'p': 'قال ﷺ: "أتدرون ما الغيبة؟ ذكرك أخاك بما يكره"'},
-            ];
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('محرمات مغفول عنها'), backgroundColor: const Color(0xFF001F1F)),
-              body: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (c, i) => Card(
-                  color: const Color(0xFF001F1F),
-                  margin: const EdgeInsets.all(8),
-                  child: ExpansionTile(
-                    title: Text(data[i]['t'], style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
-                    children: [Padding(padding: const EdgeInsets.all(15), child: Text(data[i]['p'], style: const TextStyle(color: Colors.white70)))],
-                  ),
-                ),
-              ),
-            );
-          }
-          EOF
-
-          # 3. ملف الأنساب والقبائل (العوالق، بني حارث، والصحابة)
-          cat <<'EOF' > lib/screens/lineage.dart
-          import 'package:flutter/material.dart';
-          class LineagePage extends StatelessWidget {
-            const LineagePage({super.key});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('ديوان الأنساب والتاريخ')),
-              body: ListView(children: const [
-                ListTile(title: Text('قبيلة العوالق', style: TextStyle(color: Colors.amber)), subtitle: Text('تاريخ وأعلام قبائل اليمن')),
-                ListTile(title: Text('بني حارث', style: TextStyle(color: Colors.amber)), subtitle: Text('أصول وأنساب القبيلة')),
-                Divider(color: Colors.white10),
-                ListTile(title: Text('أبو بكر الصديق', style: TextStyle(color: Colors.amber)), subtitle: Text('النسب: بنو تيم - قريش')),
-                ListTile(title: Text('خالد بن الوليد', style: TextStyle(color: Colors.amber)), subtitle: Text('النسب: بنو مخزوم - قريش')),
-              ]),
-            );
-          }
-          EOF
-
-          # (ملاحظة: سيتم إضافة كود QuranPage و pubspec تلقائياً)
-          # استكمال كود quran.dart و pubspec.yaml في الخلفية...
+          [ -f quran.dart ] && mv quran.dart lib/screens/
+          [ -f lineage.dart ] && mv lineage.dart lib/screens/
+          [ -f haram.dart ] && mv haram.dart lib/screens/
+          [ -f kids.dart ] && mv kids.dart lib/screens/
 
       - run: flutter pub get
       - run: flutter build apk --release
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HUDA-PRO-SYSTEM-FIXED
+          path: build/app/outputs/flutter-apk/app-release.apk
