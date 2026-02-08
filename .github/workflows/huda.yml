@@ -9,17 +9,12 @@ jobs:
         with:
           channel: 'stable'
       
-      # 1. تغيير الهوية برمجياً لكسر ذاكرة النسخة القديمة
-      - run: flutter create . --org com.hudapro.final --project-name huda_pro_final --overwrite
-      
-      # 2. تحميل المكتبات
+      # السر هنا: تغيير المعرف ليكون com.hudapro.final لتجنب أي تعارض
+      - run: flutter create . --org com.hudapro.final --project-name huda_pro_v2 --overwrite
       - run: flutter pub get
-      
-      # 3. بناء ملف الـ APK
       - run: flutter build apk --release
       
-      # 4. رفع الملف باسم جديد تماماً لتمييزه عن نسخة "الساعة 3"
       - uses: actions/upload-artifact@v4
         with:
-          name: Huda-Pro-Ultimate-V26
+          name: Huda-Ultimate-Package-V27 # اسم جديد لتمييزه في التحميلات
           path: build/app/outputs/flutter-apk/app-release.apk
