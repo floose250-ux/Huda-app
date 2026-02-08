@@ -1,4 +1,4 @@
-name: HUDA-MASTER-SYSTEM-V50
+name: HUDA-GLOBAL-MASTER-V60
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,55 +9,88 @@ jobs:
         with:
           channel: 'stable'
       
-      # الخطوة الذهبية: إصلاح خطأ Gradle وصناعة المجلدات المفقودة
-      - run: flutter create . --org com.huda.app.master --project-name huda_pro --overwrite
+      # 1. إصلاح خطأ Gradle وصناعة مجلدات النظام المفقودة تلقائياً
+      - run: flutter create . --org com.huda.pro.master --project-name huda_pro --overwrite
       
       - run: |
           mkdir -p lib/screens
+          mkdir -p assets
           
-          # 1. إنشاء ملف المصحف (قاعدة البيانات المنفصلة)
+          # 2. إنشاء ملف المصحف المستقل (quran.dart) - المحرك الذكي
           cat <<'EOF' > lib/screens/quran.dart
           import 'package:flutter/material.dart';
-          class QuranPage extends StatelessWidget {
+          import 'dart:convert';
+          import 'package:flutter/services.dart';
+
+          class QuranPage extends StatefulWidget {
             const QuranPage({super.key});
+            @override _QuranPageState createState() => _QuranPageState();
+          }
+
+          class _QuranPageState extends State<QuranPage> {
+            List surahs = [];
+            Future<void> loadData() async {
+              final String res = await rootBundle.loadString('assets/quran.json');
+              final data = json.decode(res);
+              setState(() => surahs = data['surahs']);
+            }
+            @override void initState() { super.initState(); loadData(); }
+
             @override
             Widget build(BuildContext context) => Scaffold(
               backgroundColor: const Color(0xFF000D0D),
               appBar: AppBar(title: const Text('المصحف الشريف'), backgroundColor: const Color(0xFF001F1F)),
-              body: ListView(children: [
-                ListTile(
-                  leading: const CircleAvatar(child: Text('1')),
-                  title: const Text('سورة الفاتحة', style: TextStyle(color: Colors.white)),
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => const SuraDetail())),
+              body: surahs.isEmpty ? const Center(child: CircularProgressIndicator()) : ListView.builder(
+                itemCount: surahs.length,
+                itemBuilder: (c, i) => ListTile(
+                  leading: CircleAvatar(child: Text('${i+1}')),
+                  title: Text(surahs[i]['name'], style: const TextStyle(color: Colors.white)),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => SuraDetail(sura: surahs[i]))),
                 ),
-              ]),
+              ),
             );
           }
+
           class SuraDetail extends StatelessWidget {
-            const SuraDetail({super.key});
+            final Map sura;
+            const SuraDetail({super.key, required this.sura});
             @override
             Widget build(BuildContext context) => Scaffold(
               backgroundColor: const Color(0xFFF5F5DC),
-              appBar: AppBar(title: const Text('سورة الفاتحة'), backgroundColor: Colors.teal.shade900),
-              body: ListView(padding: const EdgeInsets.all(20), children: [
-                _buildVerse(context, "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ (1)", "تفسير الميسر: باسم الله نبدأ..", "إعراب: الباء حرف جر.."),
-              ]),
+              appBar: AppBar(title: Text(sura['name']), backgroundColor: Colors.teal.shade900),
+              body: ListView.builder(
+                itemCount: sura['verses'].length,
+                itemBuilder: (c, i) => _verseTile(context, sura['verses'][i]),
+              ),
             );
-            Widget _buildVerse(BuildContext c, String v, String t, String i) => InkWell(
+            Widget _verseTile(BuildContext c, Map v) => InkWell(
               onTap: () => showModalBottomSheet(context: c, builder: (c) => DefaultTabController(length: 2, child: Column(children: [
                 const TabBar(tabs: [Tab(text: 'التفسير'), Tab(text: 'الإعراب')], labelColor: Colors.teal),
-                Expanded(child: TabBarView(children: [Center(child: Text(t)), Center(child: Text(i))]))
+                Expanded(child: TabBarView(children: [Padding(padding: const EdgeInsets.all(20), child: Text(v['tafsir'])), Padding(padding: const EdgeInsets.all(20), child: Text(v['irab']))]))
               ]))),
-              child: Padding(padding: const EdgeInsets.all(15), child: Text(v, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold))),
+              child: Padding(padding: const EdgeInsets.all(15), child: Text("${v['text']} (${v['id']})", textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold))),
             );
           }
           EOF
 
-          # 2. إنشاء المحرك الرئيسي (main.dart) الذي يستدعي المصحف
+          # 3. إنشاء المحرك الرئيسي (main.dart)
           cat <<'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
           import 'screens/quran.dart';
           void main() => runApp(const MaterialApp(home: QuranPage(), debugShowCheckedModeBanner: false));
+          EOF
+
+          # 4. إنشاء ملف البيانات (quran.json) - الفاتحة كمثال للبدء
+          cat <<'EOF' > assets/quran.json
+          {"surahs": [{"id": 1, "name": "الفاتحة", "verses": [{"id": 1, "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ", "tafsir": "نبدأ مستعينين بالله..", "irab": "الباء حرف جر.."}]}]}
+          EOF
+
+          # 5. تحديث ملف الإعدادات (pubspec.yaml)
+          cat <<'EOF' > pubspec.yaml
+          name: huda_pro
+          environment: {sdk: ">=3.0.0 <4.0.0"}
+          dependencies: {flutter: {sdk: flutter}}
+          flutter: {uses-material-design: true, assets: [assets/quran.json]}
           EOF
 
       - run: flutter pub get
@@ -65,5 +98,5 @@ jobs:
       
       - uses: actions/upload-artifact@v4
         with:
-          name: HUDA-PRO-FIXED-V50
+          name: HUDA-MASTER-V60
           path: build/app/outputs/flutter-apk/app-release.apk
