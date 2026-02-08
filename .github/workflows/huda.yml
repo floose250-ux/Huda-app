@@ -1,4 +1,4 @@
-name: HUDA-MASTER-BUILD-V50
+name: HUDA-MASTER-SYSTEM-V50
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,23 +9,13 @@ jobs:
         with:
           channel: 'stable'
       
-      # الخطوة الأهم: بناء ملفات الـ Gradle المفقودة لإصلاح الخطأ
-      - run: flutter create . --org com.huda.pro.final --project-name huda_pro --overwrite
+      # الخطوة الذهبية: إصلاح خطأ Gradle وصناعة المجلدات المفقودة
+      - run: flutter create . --org com.huda.app.master --project-name huda_pro --overwrite
       
-      # إنشاء المجلدات لتوزيع الأقسام
       - run: |
           mkdir -p lib/screens
-          mkdir -p assets
           
-          # 1. ملف المحرك (main.dart)
-          cat <<'EOF' > lib/main.dart
-          import 'package:flutter/material.dart';
-          import 'screens/quran.dart';
-
-          void main() => runApp(const MaterialApp(home: QuranPage(), debugShowCheckedModeBanner: false));
-          EOF
-
-          # 2. ملف المصحف الشامل (quran.dart) - يحتوي على التفسير والإعراب
+          # 1. إنشاء ملف المصحف (قاعدة البيانات المنفصلة)
           cat <<'EOF' > lib/screens/quran.dart
           import 'package:flutter/material.dart';
           class QuranPage extends StatelessWidget {
@@ -43,19 +33,17 @@ jobs:
               ]),
             );
           }
-
           class SuraDetail extends StatelessWidget {
             const SuraDetail({super.key});
             @override
             Widget build(BuildContext context) => Scaffold(
               backgroundColor: const Color(0xFFF5F5DC),
-              appBar: AppBar(title: const Text('الفاتحة'), backgroundColor: Colors.teal.shade900),
+              appBar: AppBar(title: const Text('سورة الفاتحة'), backgroundColor: Colors.teal.shade900),
               body: ListView(padding: const EdgeInsets.all(20), children: [
-                _verse(context, "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ (1)", "تفسير: نبدأ مستعينين بالله..", "إعراب: الباء حرف جر.."),
-                _verse(context, "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ (2)", "تفسير: الثناء لله رب كل شيء..", "إعراب: الحمدُ مبتدأ مرفوع.."),
+                _buildVerse(context, "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ (1)", "تفسير الميسر: باسم الله نبدأ..", "إعراب: الباء حرف جر.."),
               ]),
             );
-            Widget _verse(BuildContext c, String v, String t, String i) => InkWell(
+            Widget _buildVerse(BuildContext c, String v, String t, String i) => InkWell(
               onTap: () => showModalBottomSheet(context: c, builder: (c) => DefaultTabController(length: 2, child: Column(children: [
                 const TabBar(tabs: [Tab(text: 'التفسير'), Tab(text: 'الإعراب')], labelColor: Colors.teal),
                 Expanded(child: TabBarView(children: [Center(child: Text(t)), Center(child: Text(i))]))
@@ -65,16 +53,11 @@ jobs:
           }
           EOF
 
-          # 3. تحديث ملف الخصائص (pubspec.yaml)
-          cat <<'EOF' > pubspec.yaml
-          name: huda_pro
-          environment:
-            sdk: ">=3.0.0 <4.0.0"
-          dependencies:
-            flutter:
-              sdk: flutter
-          flutter:
-            uses-material-design: true
+          # 2. إنشاء المحرك الرئيسي (main.dart) الذي يستدعي المصحف
+          cat <<'EOF' > lib/main.dart
+          import 'package:flutter/material.dart';
+          import 'screens/quran.dart';
+          void main() => runApp(const MaterialApp(home: QuranPage(), debugShowCheckedModeBanner: false));
           EOF
 
       - run: flutter pub get
@@ -82,5 +65,5 @@ jobs:
       
       - uses: actions/upload-artifact@v4
         with:
-          name: HUDA-FINAL-PRO-APK
+          name: HUDA-PRO-FIXED-V50
           path: build/app/outputs/flutter-apk/app-release.apk
