@@ -1,4 +1,4 @@
-name: HUDA-PRO-FULL-ULTIMATE
+name: HUDA-VERIFIED-PROHIBITIONS-V44
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,24 +9,23 @@ jobs:
         with:
           channel: 'stable'
       
-      - run: flutter create . --org com.huda.pro.ultimate --project-name huda_pro --overwrite
+      - run: flutter create . --org com.huda.pro.world --project-name huda_pro --overwrite
       
       - run: |
           mkdir -p lib
           cat <<'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
 
-          void main() => runApp(const MaterialApp(home: MainNavigation(), debugShowCheckedModeBanner: false));
+          void main() => runApp(const MaterialApp(home: MainNav(), debugShowCheckedModeBanner: false));
 
-          // --- نظام التنقل العالمي ---
-          class MainNavigation extends StatefulWidget {
-            const MainNavigation({super.key});
-            @override _MainNavigationState createState() => _MainNavigationState();
+          class MainNav extends StatefulWidget {
+            const MainNav({super.key});
+            @override _MainNavState createState() => _MainNavState();
           }
 
-          class _MainNavigationState extends State<MainNavigation> {
+          class _MainNavState extends State<MainNav> {
             int _idx = 0;
-            final List<Widget> _screens = [const HomeScreen(), const QuranIndex(), const MisbahaScreen(), const QiblaScreen(), const AzkarLibrary()];
+            final List<Widget> _screens = [const HomeScreen(), const QuranIndex(), const SahabaScreen(), const ProhibitionsScreen()];
             @override
             Widget build(BuildContext context) => Scaffold(
               body: _screens[_idx],
@@ -40,77 +39,86 @@ jobs:
                 items: const [
                   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
                   BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
-                  BottomNavigationBarItem(icon: Icon(Icons.fingerprint), label: 'المسبحة'),
-                  BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'القبلة'),
-                  BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'الأذكار'),
+                  BottomNavigationBarItem(icon: Icon(Icons.people), label: 'الصحابة'),
+                  BottomNavigationBarItem(icon: Icon(Icons.warning_amber_rounded), label: 'المحرمات'),
                 ],
               ),
             );
           }
 
-          // --- 1. الشاشة الرئيسية (واجهة عالمية) ---
-          class HomeScreen extends StatelessWidget {
-            const HomeScreen({super.key});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('هدى برو'), centerTitle: true, backgroundColor: Colors.transparent),
-              body: ListView(children: [
-                _buildCard('مواقيت الصلاة', 'الفجر ٥:١٠ ص', Icons.access_time, Colors.teal),
-                _buildCard('آية اليوم', '"فَاذْكُرُونِي أَذْكُرْكُمْ"', Icons.format_quote, Colors.amber),
-                _buildCard('تحدي اليوم', 'قراءة سورة الكهف', Icons.star, Colors.purple),
-              ]),
-            );
-            Widget _buildCard(String t, String s, IconData i, Color c) => Container(
-              margin: const EdgeInsets.all(15), padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(color: const Color(0xFF001F1F), borderRadius: BorderRadius.circular(20), border: Border.all(color: c.withOpacity(0.3))),
-              child: Row(children: [Icon(i, color: c, size: 40), const SizedBox(width: 20), Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(t, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)), Text(s, style: const TextStyle(color: Colors.white70))])]),
-            );
-          }
+          class ProhibitionsScreen extends StatelessWidget {
+            const ProhibitionsScreen({super.key});
+            
+            final List<Map<String, dynamic>> data = const [
+              {
+                'title': 'الشرك بالله (أكبر الكبائر)',
+                'proofs': [
+                  'قال ﷺ: "ألا أنبئكم بأكبر الكبائر؟ الإشراك بالله.." (متفق عليه)',
+                  'قال ﷺ: "من مات وهو يدعو من دون الله نداً دخل النار" (رواه البخاري)'
+                ]
+              },
+              {
+                'title': 'عقوق الوالدين',
+                'proofs': [
+                  'قال ﷺ: "رضا الرب في رضا الوالد، وسخط الرب في سخط الوالد" (رواه الترمذي)',
+                  'قال ﷺ: "لا يدخل الجنة عاق.." (رواه النسائي)'
+                ]
+              },
+              {
+                'title': 'الربا وآكل مال اليتيم',
+                'proofs': [
+                  'قال ﷺ: "اجتنبوا السبع الموبقات.. وأكل الربا، وأكل مال اليتيم" (متفق عليه)',
+                  'لعن رسول الله ﷺ آكل الربا وموكله وكاتبه وشاهديه وقال: "هم سواء" (رواه مسلم)'
+                ]
+              },
+              {
+                'title': 'الغيبة والنميمة',
+                'proofs': [
+                  'قال ﷺ: "لا يدخل الجنة نمام" (متفق عليه)',
+                  'لما عرج بي مررت بقوم لهم أظفار من نحاس يخمشون وجوههم.. قلت من هؤلاء؟ قال: هؤلاء الذين يأكلون لحوم الناس (رواه أبو داود)'
+                ]
+              },
+              {
+                'title': 'الإسبال (للرجال)',
+                'proofs': [
+                  'قال ﷺ: "ما أسفل من الكعبين من الإزار ففي النار" (رواه البخاري)',
+                  'قال ﷺ: "ثلاثة لا يكلمهم الله يوم القيامة.. المسبل إزاره" (رواه مسلم)'
+                ]
+              }
+            ];
 
-          // --- 2. المصحف الشريف (الفهرس الكامل + تفاصيل الآيات) ---
-          class QuranIndex extends StatelessWidget {
-            const QuranIndex({super.key});
-            final List<String> surahs = const ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات', 'النبأ', 'النازعات', 'عبس', 'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس'];
             @override
             Widget build(BuildContext context) => Scaffold(
               backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('فهرس السور'), backgroundColor: const Color(0xFF001F1F)),
+              appBar: AppBar(title: const Text('المحرمات من السنة الصحيحة'), backgroundColor: const Color(0xFF001F1F)),
               body: ListView.builder(
-                itemCount: surahs.length,
-                itemBuilder: (context, i) => ListTile(
-                  leading: CircleAvatar(child: Text('${i+1}', style: const TextStyle(fontSize: 12))),
-                  title: Text(surahs[i], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white24),
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => SuraDetails(name: surahs[i]))),
+                itemCount: data.length,
+                padding: const EdgeInsets.all(10),
+                itemBuilder: (context, i) => Card(
+                  color: const Color(0xFF001F1F),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: ExpansionTile(
+                    title: Text(data[i]['title'], style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                    leading: const Icon(Icons.error_outline, color: Colors.redAccent),
+                    children: (data[i]['proofs'] as List<String>).map((p) => Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Text(p, textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.5)),
+                    )).toList(),
+                  ),
                 ),
               ),
             );
           }
 
-          class SuraDetails extends StatelessWidget {
-            final String name;
-            const SuraDetails({super.key, required this.name});
-            @override
-            Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFFF5F5DC),
-              appBar: AppBar(title: Text('سورة $name'), backgroundColor: Colors.teal.shade900, actions: [IconButton(icon: const Icon(Icons.play_arrow), onPressed: (){})]),
-              body: ListView(padding: const EdgeInsets.all(20), children: [
-                _verseTile(context, "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ (1)", "تفسير: باسم الله نبدأ..", "إعراب: الباء حرف جر..", "معاني: الله: المألوه المعبود.."),
-                _verseTile(context, "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ (2)", "تفسير: الثناء الكامل لله..", "إعراب: الحمدُ مبتدأ..", "معاني: العالمين: كل ما سوى الله.."),
-              ]),
-            );
-            Widget _verseTile(BuildContext c, String v, String t, String i, String m) => InkWell(
-              onTap: () => showModalBottomSheet(context: c, backgroundColor: const Color(0xFF001F1F), builder: (context) => DefaultTabController(length: 3, child: Column(children: [
-                const TabBar(tabs: [Tab(text: 'تفسير'), Tab(text: 'إعراب'), Tab(text: 'معاني')], indicatorColor: Colors.amber),
-                Expanded(child: TabBarView(children: [Center(child: Text(t)), Center(child: Text(i)), Center(child: Text(m))]))
-              ]))),
-              child: Padding(padding: const EdgeInsets.symmetric(vertical: 15), child: Text(v, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold))),
-            );
-          }
+          class HomeScreen extends StatelessWidget { const HomeScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text('هدى برو')); }
+          class QuranIndex extends StatelessWidget { const QuranIndex({super.key}); @override Widget build(BuildContext context) => const Center(child: Text('المصحف')); }
+          class SahabaScreen extends StatelessWidget { const SahabaScreen({super.key}); @override Widget build(BuildContext context) => const Center(child: Text('الصحابة')); }
+          EOF
 
-          // --- 3. المسبحة والموسوعة والقبلة ---
-          class MisbahaScreen extends StatefulWidget {
-            const MisbahaScreen({super.key});
-            @override _MisbahaState createState() => _MisbahaState();
-          }
+      - run: flutter pub get
+      - run: flutter build apk --release
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HUDA-VERIFIED-PROHIBITIONS-V44
+          path: build/app/outputs/flutter-apk/app-release.apk
