@@ -8,11 +8,11 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      # هذا السطر سيقوم بإنشاء الملفات الناقصة تلقائياً
-      - run: flutter create . --overwrite
+      # التعديل هنا: أجبرنا النظام على تغيير الهوية والاسم برمجياً
+      - run: flutter create . --org com.hudapro.new --project-name huda_pro_final --overwrite
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
-          name: Huda-Final-App
+          name: Huda-Pro-New-Version-V20 # اسم جديد تماماً للملف
           path: build/app/outputs/flutter-apk/app-release.apk
