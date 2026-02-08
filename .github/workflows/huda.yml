@@ -1,4 +1,4 @@
-name: HUDA-PRO-FINAL-APK-V71
+name: HUDA-PRO-OFFICIAL-V72
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,19 +9,21 @@ jobs:
         with:
           channel: 'stable'
       
-      # 1. تنظيف وبناء الهيكل السليم (اللي نجحنا فيه قبل شوي)
+      # 1. تنظيف شامل وبناء النظام باسم حزمة جديد وسليم
       - run: |
           rm -rf lib android ios assets pubspec.yaml
-          flutter create . --org com.huda.app.final --project-name huda_pro --overwrite
+          # غيرنا final إلى official عشان ما يرفضها الأندرويد
+          flutter create . --org com.huda.app.official --project-name huda_pro --overwrite
           mkdir -p lib/screens
           
-          # كود شاشة الفاتحة (التي نجحت معك سابقاً)
+          # إنشاء ملف التشغيل (main.dart)
           cat <<'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
           import 'screens/quran.dart';
           void main() => runApp(const MaterialApp(home: QuranPage(), debugShowCheckedModeBanner: false));
           EOF
 
+          # إنشاء ملف المصحف (quran.dart)
           cat <<'EOF' > lib/screens/quran.dart
           import 'package:flutter/material.dart';
           class QuranPage extends StatelessWidget {
@@ -30,17 +32,17 @@ jobs:
             Widget build(BuildContext context) => Scaffold(
               backgroundColor: const Color(0xFF000D0D),
               appBar: AppBar(title: const Text('المصحف الشريف'), backgroundColor: const Color(0xFF001F1F)),
-              body: const ListTile(title: Text('سورة الفاتحة', style: TextStyle(color: Colors.white))),
+              body: const Center(child: Text('سورة الفاتحة', style: TextStyle(color: Colors.white, fontSize: 24))),
             );
           }
           EOF
 
-      # 2. أمر البناء الفعلي (هذا اللي كان ناقصك)
+      # 2. أوامر بناء الـ APK (التي تضمن ظهور ملف التحميل)
       - run: flutter pub get
       - run: flutter build apk --release
       
-      # 3. أمر إظهار رابط التحميل (Artifacts)
+      # 3. رفع الـ APK لكي يظهر لك رابط التحميل
       - uses: actions/upload-artifact@v4
         with:
-          name: HUDA-PRO-APK-V71
+          name: HUDA-PRO-APK-V72
           path: build/app/outputs/flutter-apk/app-release.apk
