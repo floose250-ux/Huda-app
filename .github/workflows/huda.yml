@@ -1,4 +1,4 @@
-name: Huda-PRO-Ultimate-Build
+name: Huda-PRO-Final-Build
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,12 +9,12 @@ jobs:
         with:
           channel: 'stable'
       
-      # السر هنا: تغيير المعرف ليكون com.hudapro.final لتجنب أي تعارض
-      - run: flutter create . --org com.hudapro.final --project-name huda_pro_v2 --overwrite
+      # تغيير الهوية البرمجية لضمان عدم التعارض مع النسخ القديمة
+      - run: flutter create . --org com.hudapro.final --project-name huda_pro_final --overwrite
       - run: flutter pub get
       - run: flutter build apk --release
       
       - uses: actions/upload-artifact@v4
         with:
-          name: Huda-Ultimate-Package-V27 # اسم جديد لتمييزه في التحميلات
+          name: Huda-Pro-V25-Success # اسم الملف الجديد تماماً
           path: build/app/outputs/flutter-apk/app-release.apk
