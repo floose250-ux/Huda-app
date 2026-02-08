@@ -1,4 +1,4 @@
-name: HUDA-PRO-FIX-V67
+name: HUDA-PRO-FINAL-APK-V71
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,59 +9,38 @@ jobs:
         with:
           channel: 'stable'
       
-      # 1. تنظيف شامل وتغيير اسم الحزمة المحظور (com.huda.app.pro بدلاً من final)
+      # 1. تنظيف وبناء الهيكل السليم (اللي نجحنا فيه قبل شوي)
       - run: |
-          rm -rf lib android ios assets pubspec.yaml test
-          flutter create . --org com.huda.app.pro --project-name huda_pro --overwrite
-      
-      # 2. بناء "الغرف" (الملفات المنفصلة) وحقن كل ميزاتك
-      - run: |
+          rm -rf lib android ios assets pubspec.yaml
+          flutter create . --org com.huda.app.final --project-name huda_pro --overwrite
           mkdir -p lib/screens
           
-          # ملف التشغيل الرئيسي (شريط التنقل لـ 6 أقسام)
+          # كود شاشة الفاتحة (التي نجحت معك سابقاً)
           cat <<'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
           import 'screens/quran.dart';
-          import 'screens/azkar.dart';
-          import 'screens/lineage.dart';
-          import 'screens/haram.dart';
-          import 'screens/kids.dart';
+          void main() => runApp(const MaterialApp(home: QuranPage(), debugShowCheckedModeBanner: false));
+          EOF
 
-          void main() => runApp(const MaterialApp(home: MainNav(), debugShowCheckedModeBanner: false));
-
-          class MainNav extends StatefulWidget {
-            const MainNav({super.key});
-            @override _MainNavState createState() => _MainNavState();
-          }
-
-          class _MainNavState extends State<MainNav> {
-            int _idx = 1; // يبدأ من المصحف
-            final List<Widget> _screens = [const Center(child: Icon(Icons.mosque, size: 80, color: Colors.teal)), const QuranPage(), const AzkarPage(), const LineagePage(), const HaramPage(), const KidsPage()];
+          cat <<'EOF' > lib/screens/quran.dart
+          import 'package:flutter/material.dart';
+          class QuranPage extends StatelessWidget {
+            const QuranPage({super.key});
             @override
             Widget build(BuildContext context) => Scaffold(
-              body: _screens[_idx],
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: _idx,
-                onTap: (i) => setState(() => _idx = i),
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: const Color(0xFF001F1F),
-                selectedItemColor: Colors.amber,
-                unselectedItemColor: Colors.white60,
-                items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
-                  BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
-                  BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'الأذكار'),
-                  BottomNavigationBarItem(icon: Icon(Icons.people), label: 'الأنساب'),
-                  BottomNavigationBarItem(icon: Icon(Icons.warning), label: 'المحرمات'),
-                  BottomNavigationBarItem(icon: Icon(Icons.child_care), label: 'البراعم'),
-                ],
-              ),
+              backgroundColor: const Color(0xFF000D0D),
+              appBar: AppBar(title: const Text('المصحف الشريف'), backgroundColor: const Color(0xFF001F1F)),
+              body: const ListTile(title: Text('سورة الفاتحة', style: TextStyle(color: Colors.white))),
             );
           }
           EOF
 
-          # ملف المصحف (الذي نجحت في تشغيله سابقاً)
-          cat <<'EOF' > lib/screens/quran.dart
-          import 'package:flutter/material.dart';
-          class QuranPage extends StatelessWidget {
-            const QuranPage({
+      # 2. أمر البناء الفعلي (هذا اللي كان ناقصك)
+      - run: flutter pub get
+      - run: flutter build apk --release
+      
+      # 3. أمر إظهار رابط التحميل (Artifacts)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HUDA-PRO-APK-V71
+          path: build/app/outputs/flutter-apk/app-release.apk
