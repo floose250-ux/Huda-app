@@ -1,4 +1,4 @@
-name: Final Huda App
+name: Huda-PRO-New-Version
 on: [push, workflow_dispatch]
 jobs:
   build:
