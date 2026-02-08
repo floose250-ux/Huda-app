@@ -1,4 +1,4 @@
-name: HUDA-FINAL-PRO-SUCCESS
+name: HUDA-FINAL-FIX-V36
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,11 +9,12 @@ jobs:
         with:
           channel: 'stable'
       
-      # هذا الأمر سيصلح خطأ Gradle ويجهز ملفات الأندرويد باسم آمن (com.huda.app.pro)
+      # 1. إصلاح خطأ Unsupported Gradle وتجهيز ملفات الأندرويد
       - run: flutter create . --org com.huda.app.pro --project-name huda_pro_app --overwrite
       
-      # هذا السطر سيمسح كود العداد الافتراضي ويضع كودك "الأسود الفخم" بقوة لضمان عدم ظهوره مرة أخرى
+      # 2. حقن الكود الأسود بقوة (لضمان عدم ظهور العداد القديم)
       - run: |
+          mkdir -p lib
           cat <<EOF > lib/main.dart
           import 'package:flutter/material.dart';
           void main() => runApp(const MaterialApp(home: HudaProHome(), debugShowCheckedModeBanner: false));
@@ -50,5 +51,5 @@ jobs:
       
       - uses: actions/upload-artifact@v4
         with:
-          name: HUDA-BLACK-APP-FINAL-VERIFIED
+          name: HUDA-PRO-BLACK-READY-V36
           path: build/app/outputs/flutter-apk/app-release.apk
