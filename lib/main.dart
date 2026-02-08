@@ -1,76 +1,60 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MaterialApp(home: HudaUltimateApp(), debugShowCheckedModeBanner: false));
+void main() => runApp(const MaterialApp(home: HudaProV1(), debugShowCheckedModeBanner: false));
 
-class HudaUltimateApp extends StatelessWidget {
-  const HudaUltimateApp({super.key});
+class HudaProV1 extends StatefulWidget {
+  const HudaProV1({super.key});
+  @override
+  _HudaProV1State createState() => _HudaProV1State();
+}
+
+class _HudaProV1State extends State<HudaProV1> {
+  int _counter = 0; // ميزة عداد الاستغفار
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF000F0F), // لون أسود عميق
-      appBar: AppBar(
-        title: const Text('هدى برو - النسخة النهائية'),
-        centerTitle: true,
-        backgroundColor: Colors.teal.shade900,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildDailyVerse(), // الميزة الجديدة: آية اليوم
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+      backgroundColor: const Color(0xFF001212),
+      appBar: AppBar(title: const Text('هدى برو - النسخة الآمنة'), backgroundColor: Colors.teal.shade900, centerTitle: true),
+      body: Column(
+        children: [
+          _dailyChallenge(),
+          Expanded(
+            child: GridView.count(
               crossAxisCount: 2,
               padding: const EdgeInsets.all(15),
-              mainAxisSpacing: 15,
-              crossAxisSpacing: 15,
+              mainAxisSpacing: 12, crossAxisSpacing: 12,
               children: [
-                _menuIcon(context, 'القرآن الكريم', Icons.menu_book, Colors.amber),
-                _menuIcon(context, 'أذكار اليوم', Icons.wb_sunny, Colors.orange),
-                _menuIcon(context, 'المسبحة الذكية', Icons.fingerprint, Colors.tealAccent),
-                _menuIcon(context, 'اتجاه القبلة', Icons.explore, Colors.redAccent),
-                _menuIcon(context, 'حصن المسلم', Icons.security, Colors.blue),
-                _menuIcon(context, 'أوقات الصلاة', Icons.access_time, Colors.greenAccent),
+                _card('المصحف', Icons.book, Colors.amber),
+                _card('الأذكار', Icons.wb_sunny, Colors.orange),
+                _card('القبلة', Icons.explore, Colors.redAccent),
+                _card('المسبحة', Icons.fingerprint, Colors.tealAccent),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDailyVerse() => Container(
-    margin: const EdgeInsets.all(15),
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(colors: [Colors.teal.shade700, Colors.teal.shade400]),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: const Column(
+  Widget _dailyChallenge() => Container(
+    margin: const EdgeInsets.all(20), padding: const EdgeInsets.all(25),
+    decoration: BoxDecoration(color: Colors.teal.shade800, borderRadius: BorderRadius.circular(25)),
+    child: Column(
       children: [
-        Text('آية اليوم', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-        SizedBox(height: 10),
-        Text(' "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ" ', 
-             textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 16, fontStyle: FontStyle.italic)),
+        const Text('تحدي الاستغفار اليومي', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+        Text('$_counter', style: const TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)),
+        ElevatedButton(
+          onPressed: () => setState(() => _counter++),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+          child: const Text('استغفر الآن', style: TextStyle(color: Colors.black)),
+        ),
       ],
     ),
   );
 
-  Widget _menuIcon(BuildContext context, String title, IconData icon, Color color) => Card(
-    color: const Color(0xFF002424),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    child: InkWell(
-      onTap: () {},
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 45, color: color),
-          const SizedBox(height: 10),
-          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    ),
+  Widget _card(String t, IconData i, Color c) => Card(
+    color: const Color(0xFF002A2A),
+    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(i, size: 45, color: c), Text(t, style: const TextStyle(color: Colors.white))]),
   );
 }
