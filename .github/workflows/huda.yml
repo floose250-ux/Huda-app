@@ -16,5 +16,5 @@ jobs:
       
       - uses: actions/upload-artifact@v4
         with:
-          name: Huda-PRO-Safe-Build-Feb8 # اسم جديد تماماً للملف
+          name: HUDA-BLACK-VERSION-NOW # اسم جديد تماماً للملف
           path: build/app/outputs/flutter-apk/app-release.apk
