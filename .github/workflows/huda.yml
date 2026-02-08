@@ -1,4 +1,4 @@
-name: HUDA-CLEAN-REBUILD-V66
+name: HUDA-PRO-FIX-V67
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,44 +9,59 @@ jobs:
         with:
           channel: 'stable'
       
-      # 1. إزالة أي ملفات يدوية مسببة للتعارض (مثل ملف lib اليدوي)
+      # 1. تنظيف شامل وتغيير اسم الحزمة المحظور (com.huda.app.pro بدلاً من final)
       - run: |
           rm -rf lib android ios assets pubspec.yaml test
-          flutter create . --org com.huda.app.final --project-name huda_pro --overwrite
+          flutter create . --org com.huda.app.pro --project-name huda_pro --overwrite
       
-      # 2. إعادة بناء المجلدات وحقن ملفات الـ Dart (المصحف، الأنساب، الأذكار)
+      # 2. بناء "الغرف" (الملفات المنفصلة) وحقن كل ميزاتك
       - run: |
           mkdir -p lib/screens
           
-          # ملف التشغيل الرئيسي
+          # ملف التشغيل الرئيسي (شريط التنقل لـ 6 أقسام)
           cat <<'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
           import 'screens/quran.dart';
-          void main() => runApp(const MaterialApp(home: QuranPage(), debugShowCheckedModeBanner: false));
-          EOF
+          import 'screens/azkar.dart';
+          import 'screens/lineage.dart';
+          import 'screens/haram.dart';
+          import 'screens/kids.dart';
 
-          # ملف المصحف (الذي ظهر بنجاح في صورتك السابقة)
-          cat <<'EOF' > lib/screens/quran.dart
-          import 'package:flutter/material.dart';
-          class QuranPage extends StatelessWidget {
-            const QuranPage({super.key});
+          void main() => runApp(const MaterialApp(home: MainNav(), debugShowCheckedModeBanner: false));
+
+          class MainNav extends StatefulWidget {
+            const MainNav({super.key});
+            @override _MainNavState createState() => _MainNavState();
+          }
+
+          class _MainNavState extends State<MainNav> {
+            int _idx = 1; // يبدأ من المصحف
+            final List<Widget> _screens = [const Center(child: Icon(Icons.mosque, size: 80, color: Colors.teal)), const QuranPage(), const AzkarPage(), const LineagePage(), const HaramPage(), const KidsPage()];
             @override
             Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('المصحف الشريف'), backgroundColor: const Color(0xFF001F1F)),
-              body: ListTile(
-                leading: const CircleAvatar(child: Text('1')),
-                title: const Text('سورة الفاتحة', style: TextStyle(color: Colors.white)),
-                onTap: () {},
+              body: _screens[_idx],
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: _idx,
+                onTap: (i) => setState(() => _idx = i),
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: const Color(0xFF001F1F),
+                selectedItemColor: Colors.amber,
+                unselectedItemColor: Colors.white60,
+                items: const [
+                  BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
+                  BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
+                  BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'الأذكار'),
+                  BottomNavigationBarItem(icon: Icon(Icons.people), label: 'الأنساب'),
+                  BottomNavigationBarItem(icon: Icon(Icons.warning), label: 'المحرمات'),
+                  BottomNavigationBarItem(icon: Icon(Icons.child_care), label: 'البراعم'),
+                ],
               ),
             );
           }
           EOF
 
-      - run: flutter pub get
-      - run: flutter build apk --release
-      
-      - uses: actions/upload-artifact@v4
-        with:
-          name: HUDA-FIXED-APK-V66
-          path: build/app/outputs/flutter-apk/app-release.apk
+          # ملف المصحف (الذي نجحت في تشغيله سابقاً)
+          cat <<'EOF' > lib/screens/quran.dart
+          import 'package:flutter/material.dart';
+          class QuranPage extends StatelessWidget {
+            const QuranPage({
