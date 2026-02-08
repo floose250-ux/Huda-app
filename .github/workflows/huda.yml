@@ -8,11 +8,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      # التعديل هنا: أجبرنا النظام على تغيير الهوية والاسم برمجياً
-      - run: flutter create . --org com.hudapro.new --project-name huda_pro_final --overwrite
+      # تم تغيير المعرف ليكون صالحاً (com.hudapro.app) بدلاً من الكلمة الممنوعة
+      - run: flutter create . --org com.hudapro.app --project-name huda_pro_final --overwrite
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
-          name: Huda-Pro-New-Version-V20 # اسم جديد تماماً للملف
+          name: Huda-Pro-New-Version-Fixed
           path: build/app/outputs/flutter-apk/app-release.apk
+concurrency: 
