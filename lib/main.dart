@@ -8,7 +8,7 @@ class HudaUltimateApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF000F0F),
+      backgroundColor: const Color(0xFF000F0F), // لون أسود عميق
       appBar: AppBar(
         title: const Text('هدى برو - النسخة النهائية'),
         centerTitle: true,
@@ -18,7 +18,7 @@ class HudaUltimateApp extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildDailyGoal(), // الميزة الجديدة: هدف الحسنات اليومي
+            _buildDailyVerse(), // الميزة الجديدة: آية اليوم
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -31,8 +31,8 @@ class HudaUltimateApp extends StatelessWidget {
                 _menuIcon(context, 'أذكار اليوم', Icons.wb_sunny, Colors.orange),
                 _menuIcon(context, 'المسبحة الذكية', Icons.fingerprint, Colors.tealAccent),
                 _menuIcon(context, 'اتجاه القبلة', Icons.explore, Colors.redAccent),
-                _menuIcon(context, 'أقرب مسجد', Icons.location_on, Colors.greenAccent),
-                _menuIcon(context, 'عن التطبيق', Icons.info, Colors.blue),
+                _menuIcon(context, 'حصن المسلم', Icons.security, Colors.blue),
+                _menuIcon(context, 'أوقات الصلاة', Icons.access_time, Colors.greenAccent),
               ],
             ),
           ],
@@ -41,36 +41,36 @@ class HudaUltimateApp extends StatelessWidget {
     );
   }
 
-  Widget _buildDailyGoal() => Container(
-        margin: const EdgeInsets.all(15),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.teal.shade700, Colors.teal.shade400]),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: const Column(
-          children: [
-            Text('حصاد الحسنات اليومي', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-            SizedBox(height: 10),
-            Text('قال ﷺ: "كلمتان خفيفتان على اللسان، ثقيلتان في الميزان: سبحان الله وبحمده، سبحان الله العظيم"', 
-                 textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 14)),
-          ],
-        ),
-      );
+  Widget _buildDailyVerse() => Container(
+    margin: const EdgeInsets.all(15),
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [Colors.teal.shade700, Colors.teal.shade400]),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: const Column(
+      children: [
+        Text('آية اليوم', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+        SizedBox(height: 10),
+        Text(' "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ" ', 
+             textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 16, fontStyle: FontStyle.italic)),
+      ],
+    ),
+  );
 
   Widget _menuIcon(BuildContext context, String title, IconData icon, Color color) => Card(
-        color: const Color(0xFF002424),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: InkWell(
-          onTap: () {},
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 45, color: color),
-              const SizedBox(height: 10),
-              Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-      );
+    color: const Color(0xFF002424),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    child: InkWell(
+      onTap: () {},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 45, color: color),
+          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    ),
+  );
 }
