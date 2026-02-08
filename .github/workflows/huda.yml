@@ -1,4 +1,4 @@
-name: Huda-Ultimate-Build
+name: Huda-BLACK-VERSION-NOW
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,12 +9,15 @@ jobs:
         with:
           channel: 'stable'
       
-      # تم تغيير المعرف ليكون (com.hudapro.v1) وهو اسم قانوني ومقبول
-      - run: flutter create . --org com.hudapro.v1 --project-name huda_ultimate --overwrite
+      # الخطوة الأهم: مسح الذاكرة القديمة تماماً
+      - run: flutter clean
+      
+      # تغيير الهوية لضمان أن الجوال يعتبره تطبيقاً جديداً
+      - run: flutter create . --org com.hudapro.now --project-name huda_ultimate --overwrite
       - run: flutter pub get
       - run: flutter build apk --release
       
       - uses: actions/upload-artifact@v4
         with:
-          name: HUDA-BLACK-VERSION-NOW # اسم جديد تماماً للملف
+          name: HUDA-REAL-BLACK-APP-NOW # اسم جديد ومختلف كلياً
           path: build/app/outputs/flutter-apk/app-release.apk
