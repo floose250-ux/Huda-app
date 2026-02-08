@@ -1,4 +1,4 @@
-name: HUDA-ULTIMATE-PRO-V38
+name: HUDA-WORLD-CLASS-PRO
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -9,66 +9,118 @@ jobs:
         with:
           channel: 'stable'
       
-      # إصلاح ملفات النظام
-      - run: flutter create . --org com.huda.app.pro --project-name huda_pro_app --overwrite
+      - run: flutter create . --org com.huda.pro.world --project-name huda_pro --overwrite
       
-      # حقن الكود الشامل (المصحف + الأذكار + التفسير)
       - run: |
           mkdir -p lib
           cat <<EOF > lib/main.dart
           import 'package:flutter/material.dart';
-          void main() => runApp(const MaterialApp(home: HudaProHome(), debugShowCheckedModeBanner: false));
-          
-          class HudaProHome extends StatelessWidget {
-            const HudaProHome({super.key});
-            @override Widget build(BuildContext context) {
+
+          void main() => runApp(const HudaApp());
+
+          class HudaApp extends StatelessWidget {
+            const HudaApp({super.key});
+            @override
+            Widget build(BuildContext context) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  brightness: Brightness.dark,
+                  primaryColor: const Color(0xFF004D40),
+                  scaffoldBackgroundColor: const Color(0xFF000D0D),
+                ),
+                home: const MainNavigation(),
+              );
+            }
+          }
+
+          class MainNavigation extends StatefulWidget {
+            const MainNavigation({super.key});
+            @override
+            _MainNavigationState createState() => _MainNavigationState();
+          }
+
+          class _MainNavigationState extends State<MainNavigation> {
+            int _currentIndex = 0;
+            final List<Widget> _screens = [const HomeScreen(), const QuranIndexScreen(), const AzkarLibraryScreen(), const SettingsScreen()];
+
+            @override
+            Widget build(BuildContext context) {
               return Scaffold(
-                backgroundColor: const Color(0xFF000D0D),
-                appBar: AppBar(title: const Text('هدى برو - الموسوعة الشاملة'), backgroundColor: Colors.teal.shade900, centerTitle: true),
-                body: GridView.count(
-                  crossAxisCount: 2, padding: const EdgeInsets.all(15), mainAxisSpacing: 15, crossAxisSpacing: 15,
-                  children: [
-                    _card(context, 'المصحف الشريف', Icons.menu_book, Colors.amber, const QuranPage()),
-                    _card(context, 'موسوعة الأذكار', Icons.auto_awesome, Colors.orange, const AzkarCategories()),
-                    _card(context, 'اتجاه القبلة', Icons.explore, Colors.redAccent, null),
-                    _card(context, 'تحدي الاستغفار', Icons.fingerprint, Colors.tealAccent, null),
+                body: _screens[_currentIndex],
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: _currentIndex,
+                  onTap: (index) => setState(() => _currentIndex = index),
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: const Color(0xFF001F1F),
+                  selectedItemColor: Colors.amber,
+                  unselectedItemColor: Colors.white60,
+                  items: const [
+                    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
+                    BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'المصحف'),
+                    BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'الأذكار'),
+                    BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'الإعدادات'),
                   ],
                 ),
               );
             }
-            Widget _card(BuildContext c, String t, IconData i, Color clr, Widget? p) => Card(
-              color: const Color(0xFF001F1F), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: InkWell(onTap: () => p != null ? Navigator.push(c, MaterialPageRoute(builder: (c) => p)) : null,
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(i, size: 45, color: clr), Text(t, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))])),
+          }
+
+          class HomeScreen extends StatelessWidget {
+            const HomeScreen({super.key});
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              appBar: AppBar(title: const Text('هدى برو'), centerTitle: true, backgroundColor: Colors.transparent, elevation: 0),
+              body: SingleChildScrollView(
+                child: Column(children: [
+                  _buildQuickCard('مواقيت الصلاة', 'الفجر ٥:١٠ ص', Icons.access_time, Colors.teal),
+                  _buildQuickCard('آية اليوم', '\"فَاذْكُرُونِي أَذْكُرْكُمْ\"', Icons.format_quote, Colors.amber),
+                ]),
+              ),
+            );
+            Widget _buildQuickCard(String t, String s, IconData i, Color c) => Container(
+              width: double.infinity, margin: const EdgeInsets.all(15), padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(color: const Color(0xFF001F1F), borderRadius: BorderRadius.circular(20), border: Border.all(color: c.withOpacity(0.3))),
+              child: Row(children: [Icon(i, color: c, size: 40), const SizedBox(width: 20), Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(t, style: const TextStyle(fontWeight: FontWeight.bold)), Text(s, style: const TextStyle(color: Colors.white70))])]),
             );
           }
 
-          class QuranPage extends StatelessWidget {
-            const QuranPage({super.key});
-            @override Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('المصحف الشريف'), backgroundColor: Colors.teal.shade900),
-              body: const Center(child: Text('قائمة السور قيد التحميل...', style: TextStyle(color: Colors.white))),
+          class QuranIndexScreen extends StatelessWidget {
+            const QuranIndexScreen({super.key});
+            final List<String> surahs = const ['الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة', 'يونس', 'هود', 'يوسف', 'الرعد', 'إبراهيم', 'الحجر', 'النحل', 'الإسراء', 'الكهف', 'مريم', 'طه', 'الأنبياء', 'الحج', 'المؤمنون', 'النور', 'الفرقان', 'الشعراء', 'النمل', 'القصص', 'العنكبوت', 'الروم', 'لقمان', 'السجدة', 'الأحزاب', 'سبأ', 'فاطر', 'يس', 'الصافات', 'ص', 'الزمر', 'غافر', 'فصلت', 'الشورى', 'الزخرف', 'الدخان', 'الجاثية', 'الأحقاف', 'محمد', 'الفتح', 'الحجرات', 'ق', 'الذاريات', 'الطور', 'النجم', 'القمر', 'الرحمن', 'الواقعة', 'الحديد', 'المجادلة', 'الحشر', 'الممتحنة', 'الصف', 'الجمعة', 'المنافقون', 'التغابن', 'الطلاق', 'التحريم', 'الملك', 'القلم', 'الحاقة', 'المعارج', 'نوح', 'الجن', 'المزمل', 'المدثر', 'القيامة', 'الإنسان', 'المرسلات', 'النبأ', 'النازعات', 'عبس', 'التكوير', 'الانفطار', 'المطففين', 'الانشقاق', 'البروج', 'الطارق', 'الأعلى', 'الغاشية', 'الفجر', 'البلد', 'الشمس', 'الليل', 'الضحى', 'الشرح', 'التين', 'العلق', 'القدر', 'البينة', 'الزلزلة', 'العاديات', 'القارعة', 'التكاثر', 'العصر', 'الهمزة', 'الفيل', 'قريش', 'الماعون', 'الكوثر', 'الكافرون', 'النصر', 'المسد', 'الإخلاص', 'الفلق', 'الناس'];
+
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              appBar: AppBar(title: const Text('فهرس السور'), backgroundColor: const Color(0xFF001F1F)),
+              body: ListView.builder(
+                itemCount: surahs.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: CircleAvatar(backgroundColor: Colors.teal.shade900, child: Text('${index + 1}', style: const TextStyle(color: Colors.amber, fontSize: 12))),
+                  title: Text(surahs[index], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white24),
+                  onTap: () {},
+                ),
+              ),
             );
           }
 
-          class AzkarCategories extends StatelessWidget {
-            const AzkarCategories({super.key});
-            @override Widget build(BuildContext context) => Scaffold(
-              backgroundColor: const Color(0xFF000D0D),
-              appBar: AppBar(title: const Text('تصنيفات الأذكار'), backgroundColor: Colors.teal.shade900),
-              body: ListView(children: [
-                ListTile(leading: const Icon(Icons.wb_sunny, color: Colors.orange), title: const Text('أذكار الصباح', style: TextStyle(color: Colors.white)), onTap: () {}),
-                ListTile(leading: const Icon(Icons.nightlight_round, color: Colors.blueGrey), title: const Text('أذكار المساء', style: TextStyle(color: Colors.white)), onTap: () {}),
+          class AzkarLibraryScreen extends StatelessWidget {
+            const AzkarLibraryScreen({super.key});
+            @override
+            Widget build(BuildContext context) => Scaffold(
+              appBar: AppBar(title: const Text('موسوعة الأذكار'), backgroundColor: const Color(0xFF001F1F)),
+              body: ListView(padding: const EdgeInsets.all(15), children: [
+                _azkarTile('أذكار الصباح', Icons.wb_sunny, Colors.orange),
+                _azkarTile('أذكار المساء', Icons.nightlight_round, Colors.blue),
+                _azkarTile('أدعية الأنبياء', Icons.person, Colors.green),
+                _azkarTile('حصن المسلم', Icons.security, Colors.redAccent),
               ]),
             );
+            Widget _azkarTile(String t, IconData i, Color c) => Card(
+              color: const Color(0xFF001F1F), margin: const EdgeInsets.only(bottom: 10),
+              child: ListTile(leading: Icon(i, color: c), title: Text(t), trailing: const Icon(Icons.arrow_forward_ios, size: 14)),
+            );
           }
-          EOF
 
-      - run: flutter pub get
-      - run: flutter build apk --release
-      
-      - uses: actions/upload-artifact@v4
-        with:
-          name: HUDA-PRO-V38-ULTIMATE
-          path: build/app/outputs/flutter-apk/app-release.apk
+          class SettingsScreen extends StatelessWidget {
+            const SettingsScreen({super.
