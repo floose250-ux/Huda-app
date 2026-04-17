@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/quran_page.dart';
 
 void main() => runApp(const MaterialApp(home: HudaProHome(), debugShowCheckedModeBanner: false));
 
@@ -8,27 +9,82 @@ class HudaProHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF000D0D),
-      appBar: AppBar(title: const Text('هدى برو - الموسوعة الشاملة'), backgroundColor: Colors.teal.shade900, centerTitle: true),
+      appBar: AppBar(
+        title: const Text('هدى برو - الموسوعة الشاملة'),
+        backgroundColor: Colors.teal.shade900,
+        centerTitle: true,
+      ),
       body: GridView.count(
-        crossAxisCount: 2, padding: const EdgeInsets.all(15), mainAxisSpacing: 15, crossAxisSpacing: 15,
-        children: [
-          _mainCard(context, 'المصحف الشريف', Icons.menu_book, Colors.amber, null),
-          _mainCard(context, 'موسوعة الأذكار', Icons.auto_awesome, Colors.orange, const AzkarCategoriesPage()),
-          _mainCard(context, 'جوامع الدعاء', Icons.Favorite, Colors.redAccent, null),
-          _mainCard(context, 'الموسوعة الحديثية', Icons.History_edu, Colors.blueAccent, null),
+        crossAxisCount: 2,
+        padding: const EdgeInsets.all(15),
+        mainAxisSpacing: 15,
+        crossAxisSpacing: 15,
+        children: const [
+          MainCard(
+            title: 'المصحف الشريف',
+            icon: Icons.menu_book,
+            color: Colors.amber,
+            page: QuranPage(),
+          ),
+          MainCard(
+            title: 'موسوعة الأذكار',
+            icon: Icons.auto_awesome,
+            color: Colors.orange,
+            page: AzkarCategoriesPage(),
+          ),
+          MainCard(
+            title: 'جوامع الدعاء',
+            icon: Icons.favorite,
+            color: Colors.redAccent,
+          ),
+          MainCard(
+            title: 'الموسوعة الحديثية',
+            icon: Icons.history_edu,
+            color: Colors.blueAccent,
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _mainCard(BuildContext context, String t, IconData i, Color c, Widget? page) => Card(
-    color: const Color(0xFF001F1F),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    child: InkWell(
-      onTap: () => page != null ? Navigator.push(context, MaterialPageRoute(builder: (context) => page)) : null,
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(i, size: 45, color: c), const SizedBox(height: 10), Text(t, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))]),
-    ),
-  );
+class MainCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color color;
+  final Widget? page;
+
+  const MainCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.color,
+    this.page,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: const Color(0xFF001F1F),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: InkWell(
+        onTap: () => page != null
+            ? Navigator.push(context, MaterialPageRoute(builder: (context) => page!))
+            : null,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 45, color: color),
+            const SizedBox(height: 10),
+            Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // صفحة تصنيفات الأذكار (الصباح، المساء، السفر، إلخ)
