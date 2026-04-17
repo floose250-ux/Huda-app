@@ -1,0 +1,3 @@
+## 2025-04-17 - [Optimized Quran Data Loading & UI Rebuilds]
+**Learning:** Offloading JSON parsing to a background isolate using `compute()` prevents frame drops during app startup, especially for large assets like `quran.json` (464KB). Additionally, refactoring widget helper methods into `const` `StatelessWidget` classes allows the Flutter framework to skip unnecessary rebuilds, improving overall UI performance. Discovered that the `quran.json` asset had several missing commas, causing parsing failures which were fixed to ensure reliable initialization.
+**Action:** Always use isolates for parsing assets over 100KB and prioritize `const` constructors for UI components to maximize Flutter's rendering efficiency.
