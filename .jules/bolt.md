@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimization of Widget Rebuilding and Data Allocation
+**Learning:** Moving hardcoded data structures (like lists of maps for categories) out of the `build` method into `static const` members avoids redundant memory allocations and CPU cycles on every widget rebuild. Additionally, refactoring helper methods that return widgets into separate `const` StatelessWidget classes enables the Flutter framework to optimize rebuilding by caching the widget instance.
+**Action:** Always prefer `const` constructors for widgets and move static data to class-level constants. Refactor functional widget helpers into classes to leverage `const` optimizations.
