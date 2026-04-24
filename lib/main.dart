@@ -14,8 +14,8 @@ class HudaProHome extends StatelessWidget {
         children: [
           _mainCard(context, 'المصحف الشريف', Icons.menu_book, Colors.amber, null),
           _mainCard(context, 'موسوعة الأذكار', Icons.auto_awesome, Colors.orange, const AzkarCategoriesPage()),
-          _mainCard(context, 'جوامع الدعاء', Icons.Favorite, Colors.redAccent, null),
-          _mainCard(context, 'الموسوعة الحديثية', Icons.History_edu, Colors.blueAccent, null),
+          _mainCard(context, 'جوامع الدعاء', Icons.favorite, Colors.redAccent, null),
+          _mainCard(context, 'الموسوعة الحديثية', Icons.history_edu, Colors.blueAccent, null),
         ],
       ),
     );
@@ -34,29 +34,31 @@ class HudaProHome extends StatelessWidget {
 // صفحة تصنيفات الأذكار (الصباح، المساء، السفر، إلخ)
 class AzkarCategoriesPage extends StatelessWidget {
   const AzkarCategoriesPage({super.key});
+
+  // Optimized: Moved static data out of build method to avoid redundant allocations.
+  static const List<Map<String, dynamic>> _categories = [
+    {'title': 'أذكار الصباح', 'icon': Icons.wb_sunny, 'color': Colors.orange},
+    {'title': 'أذكار المساء', 'icon': Icons.nightlight_round, 'color': Colors.blueGrey},
+    {'title': 'أدعية الأنبياء', 'icon': Icons.person, 'color': Colors.green},
+    {'title': 'أدعية من القرآن', 'icon': Icons.menu_book, 'color': Colors.amber},
+    {'title': 'أدعية الاستسقاء', 'icon': Icons.water_drop, 'color': Colors.blue},
+    {'title': 'أدعية السفر', 'icon': Icons.flight, 'color': Colors.purple},
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> categories = [
-      {'title': 'أذكار الصباح', 'icon': Icons.wb_sunny, 'color': Colors.orange},
-      {'title': 'أذكار المساء', 'icon': Icons.nightlight_round, 'color': Colors.blueGrey},
-      {'title': 'أدعية الأنبياء', 'icon': Icons.person, 'color': Colors.green},
-      {'title': 'أدعية من القرآن', 'icon': Icons.menu_book, 'color': Colors.amber},
-      {'title': 'أدعية الاستسقاء', 'icon': Icons.water_drop, 'color': Colors.blue},
-      {'title': 'أدعية السفر', 'icon': Icons.flight, 'color': Colors.purple},
-    ];
-
     return Scaffold(
       backgroundColor: const Color(0xFF000D0D),
       appBar: AppBar(title: const Text('موسوعة الأذكار'), backgroundColor: Colors.teal.shade900),
       body: ListView.builder(
-        itemCount: categories.length,
+        itemCount: _categories.length,
         padding: const EdgeInsets.all(10),
         itemBuilder: (context, index) => Card(
           color: const Color(0xFF001F1F),
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: ListTile(
-            leading: Icon(categories[index]['icon'], color: categories[index]['color']),
-            title: Text(categories[index]['title'], style: const TextStyle(color: Colors.white, fontSize: 18)),
+            leading: Icon(_categories[index]['icon'], color: _categories[index]['color']),
+            title: Text(_categories[index]['title'], style: const TextStyle(color: Colors.white, fontSize: 18)),
             trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white24),
             onTap: () {
               // هنا ننتقل لصفحة المحتوى الضخم لكل تصنيف
