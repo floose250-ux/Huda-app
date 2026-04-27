@@ -17,9 +17,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  # تعريف ملفات البيانات والصور (Assets)
   assets:
     - assets/quran.json
-    # يمكنك إضافة مجلد الصور هنا مستقبلاً لـ "براعم الإيمان"
-    # - assets/images/
