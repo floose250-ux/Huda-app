@@ -1,0 +1,23 @@
+# Flutter-related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Web-related
+.web/
+
+# Symbolication logging
+node_modules/
+package-lock.json
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+
+# OS-specific files
+.DS_Store
