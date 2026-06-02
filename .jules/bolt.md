@@ -1,0 +1,3 @@
+## 2025-05-15 - Flutter Widget Refactoring for Rebuild Optimization
+**Learning:** Refactoring helper methods that return widgets into separate `const StatelessWidget` classes is a significant performance win in Flutter. It allows the framework to skip rebuilding entire subtrees by leveraging the `const` constructor. Additionally, `Radius.circular(x)` is not a constant expression, but `Radius.elliptical(x, x)` is, allowing for fully `const` `RoundedRectangleBorder` or `BorderRadius` declarations.
+**Action:** Always prefer `StatelessWidget` with `const` constructors over helper methods for UI components, and use `Radius.elliptical` for constant border radii.
