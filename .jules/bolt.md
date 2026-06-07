@@ -1,0 +1,3 @@
+## 2024-06-07 - Flutter Widget Refactoring and Static Data Optimization
+**Learning:** Refactoring helper methods into separate `StatelessWidget` classes with `const` constructors is a high-impact optimization in Flutter. It allows the framework to skip unnecessary rebuilds and reduces runtime overhead. Additionally, moving static data structures (like lists of maps) from the `build` method to `static const` members prevents redundant memory allocations on every frame.
+**Action:** Always prefer `const StatelessWidget` over helper methods that return widgets, and ensure all static configuration data is defined as `static const` outside of build methods.
