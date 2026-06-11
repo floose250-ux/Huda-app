@@ -1,0 +1,3 @@
+## 2025-05-22 - Flutter Widget Optimization Patterns
+**Learning:** Refactoring UI helper methods that return widgets into separate 'const' StatelessWidget classes enables Flutter's framework-level rebuild optimizations. Additionally, moving static data structures (like lists used in ListView.builder) out of the 'build' method into 'static const' members prevents unnecessary object allocations and CPU work on every frame rebuild.
+**Action:** Always prefer 'const' StatelessWidget over helper methods for complex or frequently rebuilt UI components. Declare static data as 'static const' at the class level.
