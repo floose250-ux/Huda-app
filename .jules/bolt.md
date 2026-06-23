@@ -1,0 +1,3 @@
+## 2025-05-15 - [Flutter UI Optimization]
+**Learning:** Using private helper methods to return widgets (like `_mainCard`) prevents Flutter from using `const` constructors and canonical instances, leading to unnecessary rebuilds of the entire subtree. Additionally, declaring large static data structures (like category lists) inside `build` methods causes redundant memory allocations on every frame.
+**Action:** Always refactor complex UI subtrees into separate `const StatelessWidget` classes and move static configuration data to `static const` fields to maximize Flutter's build efficiency and minimize GC pressure.
