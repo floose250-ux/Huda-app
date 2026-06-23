@@ -1,0 +1,3 @@
+## 2025-05-15 - [Flutter Performance: Widgets vs Helper Methods & Static Data]
+**Learning:** Refactoring helper methods that return Widgets into `const StatelessWidget` classes allows the Flutter framework to use canonical instances and skip rebuilding subtrees, significantly improving build performance. Additionally, moving static data structures (like lists of maps) from the `build` method to `static const` class fields reduces memory churn and re-allocations on every build.
+**Action:** Always prefer `const StatelessWidget` over Widget helper methods. Move static, unchanging data to `static const` fields outside the `build` method.
