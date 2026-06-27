@@ -1,0 +1,3 @@
+## 2026-06-27 - [Environment Hygiene and Functional Regressions]
+**Learning:** Build artifacts like `.dart_tool/`, `build/`, and `pubspec.lock` can bloat PRs by tens of thousands of lines, making them unreviewable and causing rejection. Additionally, manual refactoring of UI components with similar-looking text (especially in non-ASCII languages like Arabic) is prone to accidental duplication or incorrect replacement of string literals.
+**Action:** Always perform a comprehensive cleanup of all generated artifacts (`rm -rf .dart_tool/ build/ pubspec.lock`) before requesting a code review. Use `cat -n` to verify the final state of modified files line-by-line to ensure functional correctness and prevent regressions.
