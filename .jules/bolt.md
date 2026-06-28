@@ -1,0 +1,3 @@
+## 2026-06-28 - [Flutter Optimization & Environment Hygiene]
+**Learning:** In this Flutter codebase, UI components were implemented using helper methods within the build function, which prevents widget canonicalization. Additionally, using `flutter run` or `flutter create .` generates extensive platform-specific boilerplate and build artifacts that are strictly rejected by the reviewer.
+**Action:** Always refactor helper methods to `const StatelessWidget` for better performance. Ensure a comprehensive cleanup of all generated files (`android/`, `ios/`, `web/`, `pubspec.lock`, etc.) before submitting the PR to maintain repository hygiene.
