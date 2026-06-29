@@ -1,0 +1,3 @@
+## 2025-05-15 - [Flutter Performance & Verification]
+**Learning:** Refactoring helper methods to `const StatelessWidget` and moving static data to `static const` fields measurably reduces rebuild overhead and memory allocation. When verifying Flutter Web in headless environments, element-based locators often fail due to Canvas rendering; unit tests using `pumpWidget` are the most reliable verification method.
+**Action:** Always prefer `const StatelessWidget` over helper methods. Use `cat -n` and `cat -A` when modifying files with non-ASCII (Arabic) text to ensure exact matches for git merge diffs.
