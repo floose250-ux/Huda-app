@@ -1,0 +1,3 @@
+## 2026-06-30 - [Flutter Constant Optimization & Repository Hygiene]
+**Learning:** Accessing MaterialColor shades (e.g., `Colors.teal.shade900`) is a runtime getter call, which prevents the parent widget from using a `const` constructor. Replacing these with direct hex values (`const Color(0xFF004D40)`) enables full widget canonicalization. Additionally, `flutter create .` generates significant platform-specific boilerplate that must be removed to maintain repository cleanliness.
+**Action:** Always prefer direct hex color literals over MaterialColor shades when building `const` widgets. Ensure a thorough cleanup of generated platform folders (android/, ios/, etc.) before submission.
