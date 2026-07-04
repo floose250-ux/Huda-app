@@ -1,0 +1,3 @@
+## 2025-01-24 - Flutter Optimization and Repository Hygiene
+**Learning:** In Flutter, using helper methods for UI components (like _mainCard) prevents canonicalization and forces unnecessary rebuilds. Additionally, accessing MaterialColor shades (e.g., Colors.teal.shade900) is a runtime getter call that prevents 'const' instantiation of parent widgets.
+**Action:** Always refactor UI helper methods into 'const StatelessWidget' classes and replace MaterialColor shades with direct hex literals (Color(0xFF...)) to maximize 'const' usage. Ensure all build artifacts and platform-specific folders are deleted before calling request_code_review to satisfy environment hygiene requirements.
