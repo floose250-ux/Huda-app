@@ -1,0 +1,3 @@
+## 2026-07-06 - [Flutter Optimization Patterns]
+**Learning:** In Flutter, refactoring helper methods to `const StatelessWidget` classes is significantly more performant than helper methods as it allows the framework to use canonical instances and skip rebuilds. Additionally, static data structures intended to be `static const` must avoid Material color getters (e.g., `Colors.teal`) and instead use direct hex `Color` literals. Custom `AppBar` widgets used in a `Scaffold` must also implement `PreferredSizeWidget`.
+**Action:** Always prefer `const StatelessWidget` over helper methods, use hex color literals for constant data structures, and ensure custom AppBars implement `PreferredSizeWidget`.
